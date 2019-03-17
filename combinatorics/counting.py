@@ -14,7 +14,8 @@ class Product:
     for _ in range(m):
       yield tuple(random.choice(exp) for exp in self.data)
 
-  def sample_without_replacement(self, m=1): pass
+  def sample_without_replacement(self, m=1):
+    pass
 
 class Permutation:
   '''Permutations of iterables'''
@@ -31,8 +32,11 @@ class Permutation:
     if k is None: k = self.n
     return itertools.permutations(self.data, k)
 
-  def sample(self, k=None, m=None):
-    pass
+  def sample(self, k=None, m=1):
+    if k is None: k = self.n
+    if k > self.n: return None
+    for _ in range(m):
+      yield tuple(random.sample(self.data, k))
 
   def duplicates(self, k):
     pass
@@ -53,7 +57,11 @@ class Combination:
     return itertools.combinations(self.data, k)
 
   def sample(self, k=None, m=None): 
-    pass
+    if k is None: k = self.n
+    if k > self.n: return None
+    for _ in range(m):
+      indices = sorted(random.sample(range(self.n), k))
+      yield tuple(self.data[i] for i in indices)
 
   def duplicates(self, k):
     pass
