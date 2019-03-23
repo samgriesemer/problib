@@ -56,7 +56,7 @@ class Combination:
     if k is None: k = self.n
     return itertools.combinations(self.data, k)
 
-  def sample(self, k=None, m=None): 
+  def sample(self, k=None, m=1):
     if k is None: k = self.n
     if k > self.n: return None
     for _ in range(m):
