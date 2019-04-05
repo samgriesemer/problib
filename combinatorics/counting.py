@@ -55,6 +55,9 @@ class Permutation:
     if k is None: k = self.n
     return itertools.permutations(self.data, k)
 
+  def generate_with_repitition(self, k=None):
+    pass
+
   def sample(self, k=None, m=1):
     '''Return generator over m random samples from k-permutations of object data'''
     if k is None: k = self.n
@@ -62,8 +65,20 @@ class Permutation:
     for _ in range(m):
       yield tuple(random.sample(self.data, k))
 
-  def duplicates(self, k):
-    pass
+  def sample_without_replacement(self, m=1):
+    '''Randomly generate m unique permutations of object data'''
+    if m > self.count(): return None
+    generated = []
+    while len(generated) < m:
+      gtuple = next(self.sample(1))
+      if gtuple not in generated:
+        generated.append(gtuple)
+        yield gtuple
+
+  def duplicates(self, k=None):
+    if k is None: k = self.n
+    if k > self.n: return None
+    return set(self.generate(k))
 
 class Combination:
   '''Combinations of iterables'''
@@ -87,6 +102,9 @@ class Combination:
     if k is None: k = self.n
     return itertools.combinations(self.data, k)
 
+  def generate_with_repitition(self, k=None):
+    pass
+
   def sample(self, k=None, m=1):
     '''Return generator over m random samples from k-combinations of object data'''
     if k is None: k = self.n
@@ -95,5 +113,17 @@ class Combination:
       indices = sorted(random.sample(range(self.n), k))
       yield tuple(self.data[i] for i in indices)
 
+  def sample_without_replacement(self, m=1):
+    '''Randomly generate m unique permutations of object data'''
+    if m > self.count(): return None
+    generated = []
+    while len(generated) < m:
+      gtuple = next(self.sample(1))
+      if gtuple not in generated:
+        generated.append(gtuple)
+        yield gtuple
+
   def duplicates(self, k):
-    pass
+    if k is None: k = self.n
+    if k > self.n: return None
+    return set(self.generate(k))
