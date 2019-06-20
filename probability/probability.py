@@ -8,3 +8,13 @@ def sample(population, k):
     results.append(population[r])
     population.pop(r)
   return results
+
+def inverse_transform(inv_cdf):
+  r = random.random()
+  return inv_cdf(r)
+
+def normal():
+  def inv_normal(): pass
+
+def exponential():
+  pass

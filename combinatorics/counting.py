@@ -10,8 +10,7 @@ class Product:
   def count(self):
     '''Compute number of elements in product'''
     count = 1
-    for datum in self.data:
-      count *= len(datum)
+    for datum in self.data: count *= len(datum)
     return count
 
   def generate(self):

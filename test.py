@@ -14,7 +14,7 @@ def cbf(k, n, p):
   return res
 
 # initialize default values
-num_iters = 2000000
+num_iters = 200000
 M = 50
 N = 5
 R = 100

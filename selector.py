@@ -7,4 +7,4 @@ grocery = ['Schnucks']
 
 # sample a product
 p = counting.Product(dinner,dessert,grocery)
-print(list(p.sample()))
+print(next(p.sample()))
