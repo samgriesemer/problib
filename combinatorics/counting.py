@@ -54,7 +54,7 @@ class Permutation:
     if k is None: k = self.n
     return itertools.permutations(self.data, k)
 
-  def generate_with_repitition(self, k=None):
+  def generate_with_repetition(self, k=None):
     pass
 
   def sample(self, k=None, m=1):
@@ -101,7 +101,7 @@ class Combination:
     if k is None: k = self.n
     return itertools.combinations(self.data, k)
 
-  def generate_with_repitition(self, k=None):
+  def generate_with_repetition(self, k=None):
     pass
 
   def sample(self, k=None, m=1):
