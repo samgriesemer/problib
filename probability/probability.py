@@ -13,8 +13,14 @@ def inverse_transform(inv_cdf):
   r = random.random()
   return inv_cdf(r)
 
+def uniform(a,b):
+  return random.random()*abs(a-b)+min(a,b)
+
 def normal():
-  def inv_normal(): pass
+  pass
+
+def inv_normal():
+  pass
 
 def exponential():
   pass
