@@ -1,6 +1,6 @@
 import random
 
-def single_point_crossover(parent1, parent2):
+def single_point(parent1, parent2):
   child = list(parent1)
   begin = random.randint(0, len(parent1) - 1)
   end = random.randint(0, len(parent1) - 1)
