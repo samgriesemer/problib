@@ -2,5 +2,5 @@ import random
 
 def roulette(population):
   rand = random.random()*random.random()
-  cand = rand*len(population)
-  return population[cand]
+  rand = int(rand*len(population))
+  return population[rand]

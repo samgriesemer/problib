@@ -1,6 +1,6 @@
 import numpy as np
 
-class NaiveBayes:
+class NaiveBayes(Model)
   '''a naive bayes model'''
   def __init__(self):
     pass

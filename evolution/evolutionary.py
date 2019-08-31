@@ -2,11 +2,13 @@ import random
 
 class Evolutionary:
   '''Base evolutionary algorithm class'''
-  def __init__(self, population_size, num_generations, candidate):
+  def __init__(self, population_size, num_generations, mutation_rate, candidate, cand_params):
+    self.population = []
     self.population_size = population_size
     self.num_generations = num_generations
+    self.mutation_rate = mutation_rate
     self.candidate = candidate
-    create_population()
+    self.cand_params = cand_params
 
   def fitness(self, candidate):
     '''Fitness function for evaluating candidate quality'''
@@ -24,11 +26,17 @@ class Evolutionary:
     '''Method of random mutation in candidate'''
     raise NotImplementedError
 
+  def termination(self, population):
+    '''
+    Termination condition for simulation
+    By default, return False so that simulation
+    runs for all generations
+    '''
+    return False
+
   def create_population(self):
-    self.population = []
     for _ in range(self.population_size):
-      cand = self.candidate()
-      self.population.append(cand.create())
+      self.population.append(self.candidate.random(*self.cand_params))
 
   def run(self):
     raise NotImplementedError
