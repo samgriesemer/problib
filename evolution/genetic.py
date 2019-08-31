@@ -11,6 +11,9 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
       # rank individuals based on current fitness
       self.population.sort(key=lambda x: self.fitness(x), reverse=True)
 
+      print('Generation {}, best candidate: {}, fitness: {}'.format(gen, \
+            self.population[0].epigenesis(), self.fitness(self.population[0])))
+
       # check termination condition
       if self.termination(self.population): 
         return self.population[0]
@@ -33,5 +36,3 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
         # add child to population if suitable
         if self.fitness(child) > self.fitness(self.population[-1]):
           self.population[-1] = child
-
-      print('Generation {}, best candidate: {}'.format(gen, self.population[0].epigenesis()))

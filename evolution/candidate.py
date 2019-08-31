@@ -7,6 +7,9 @@ class Candidate:
     #create(**kwargs)
     self.genotype = genotype
 
+  def __str__(self):
+    return self.epigenesis()
+
   @classmethod
   def random(cls, genotype):
     self.genotype = genotype

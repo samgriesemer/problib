@@ -24,3 +24,9 @@ def inv_normal():
 
 def exponential():
   pass
+
+def poison():
+  pass
+
+def geometric():
+  pass
