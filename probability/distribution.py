@@ -8,3 +8,4 @@ class Distribution():
 
   def cdf(self, x):
     '''return cdf(x) = Pr(x <= X)'''
+    pass
