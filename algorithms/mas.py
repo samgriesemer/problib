@@ -54,25 +54,25 @@ def lp_auction(matrix, epsilon):
   # solve lp problem
   prob.solve()
   #pulp.GLPK_CMD()
-  print(pulp.LpStatus[prob.status])
+  #print(pulp.LpStatus[prob.status])
   return np.array(list(map(lambda x: x.varValue, prob.variables()))).reshape((n,m))
 
 def assignment_generator(n, M):
   return np.random.randint(0, M-1, (n,n))
 
-def experiment(trials, maxpow, M):
-  trial_avg = []
-  for i in range(maxpow):
-    n = 2**(i+1)
+def experiment(trials, pow_range, M):
+  exp_avg = []
+  for i in range(*pow_range):
+    n = 2**i
     print('Starting n={}\n'.format(n))
-    value_sum = np.zeros(n)
+    trial_avg = 0
     for j in tqdm(range(trials)):
       prob = assignment_generator(n, M)
       assignment = auction(prob, 1/(2*n))
       objects = sorted(assignment.keys(), key=lambda x: assignment[x])
-      value_sum += prob[np.arange(n), np.array(objects)]
-    trial_avg.append(value_sum/trials)
-  return trial_avg
+      trial_avg += np.mean(prob[np.arange(n), np.array(objects)])
+    exp_avg.append(trial_avg/trials)
+  return exp_avge
 
 def time_experiment(trials, n, pow_range):
   auc_list = []
@@ -84,20 +84,16 @@ def time_experiment(trials, n, pow_range):
     lp_auc_time = 0
     for j in tqdm(range(trials)):
       # regular auction algo
-      start = time.time()
+      start = time.process_time()
       auction(prob, 1/(2*n))
-      end = time.time()
+      end = time.process_time()
       auc_time += (end-start)
 
       # lp auction algo
-      start = time.time()
+      start = time.process_time()
       lp_auction(prob, 1/(2*n))
-      end = time.time()
+      end = time.process_time()
       lp_auc_time += (end-start)
-
     auc_list.append(auc_time/trials)
     lp_auc_list.append(lp_auc_time/trials)
-  #auc_list.append(timeit(lambda: auction(prob, 1/n), number=trials)/trials)
-  #lp_auc_list.append(timeit(lambda: lp_auction(prob, 1/n), number=trials)/trials)
   return auc_list, lp_auc_list
-
