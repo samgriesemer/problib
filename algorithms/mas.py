@@ -79,10 +79,10 @@ def time_experiment(trials, n, pow_range):
   lp_auc_list = []
   for i in range(*pow_range):
     M = 10**i
-    prob = assignment_generator(n, M)
     auc_time = 0
     lp_auc_time = 0
     for j in tqdm(range(trials)):
+      prob = assignment_generator(n, M)
       # regular auction algo
       start = time.process_time()
       auction(prob, 1/(2*n))
