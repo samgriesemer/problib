@@ -21,7 +21,6 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
       # consider multiple offspring per generation
       self.num_offspring = 1
       for _ in range(self.num_offspring):
-
         # stochastically select parent candidates
         parent1 = self.selection(self.population)
         parent2 = self.selection(self.population)

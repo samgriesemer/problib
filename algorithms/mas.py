@@ -9,9 +9,9 @@ from timeit import timeit
 # cols as objects, entries are values
 
 def auction(matrix, epsilon):
+  S = {} # initializpe assignment map
   n, m = matrix.shape # get number of agents (n), objects (m)
   prices = np.zeros(m) # initialize object prices
-  S = {} # initialize assignment map
   agents = deque([i for i in range(n)]) # intitialize agent list
 
   # iterate until feasible assignment
@@ -86,12 +86,14 @@ def time_experiment(trials, n, pow_range):
       # regular auction algo
       start = time.time()
       auction(prob, 1/n)
-      auc_time += (time.time()-start)
+      end = time.time()
+      auc_time += (end-start)
 
       # lp auction algo
       start = time.time()
       lp_auction(prob, 1/n)
-      lp_auc_time += (time.time()-start)
+      end = time.time()
+      lp_auc_time += (end-start)
 
     auc_list.append(auc_time/trials)
     lp_auc_list.append(lp_auc_time/trials)
