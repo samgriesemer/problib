@@ -58,7 +58,7 @@ def lp_auction(matrix, epsilon):
   return np.array(list(map(lambda x: x.varValue, prob.variables()))).reshape((n,m))
 
 def assignment_generator(n, M):
-  return np.random.randint(0, M-1, (n,n))
+  return np.random.randint(1, M, (n,n))
 
 def experiment(trials, pow_range, M):
   exp_avg = []
@@ -78,7 +78,7 @@ def time_experiment(trials, n, pow_range):
   auc_list = []
   lp_auc_list = []
   for i in range(*pow_range):
-    M = 10**i
+    M = 10**i-20
     auc_time = 0
     lp_auc_time = 0
     for j in tqdm(range(trials)):
@@ -94,6 +94,7 @@ def time_experiment(trials, n, pow_range):
       lp_auction(prob, 1/(2*n))
       end = time.process_time()
       lp_auc_time += (end-start)
+
     auc_list.append(auc_time/trials)
     lp_auc_list.append(lp_auc_time/trials)
   return auc_list, lp_auc_list
