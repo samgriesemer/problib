@@ -68,7 +68,7 @@ def experiment(trials, maxpow, M):
     value_sum = np.zeros(n)
     for j in tqdm(range(trials)):
       prob = assignment_generator(n, M)
-      assignment = auction(prob, 1/n)
+      assignment = auction(prob, 1/(2*n))
       objects = sorted(assignment.keys(), key=lambda x: assignment[x])
       value_sum += prob[np.arange(n), np.array(objects)]
     trial_avg.append(value_sum/trials)
@@ -85,13 +85,13 @@ def time_experiment(trials, n, pow_range):
     for j in tqdm(range(trials)):
       # regular auction algo
       start = time.time()
-      auction(prob, 1/n)
+      auction(prob, 1/(2*n)) 1
       end = time.time()
       auc_time += (end-start)
 
       # lp auction algo
       start = time.time()
-      lp_auction(prob, 1/n)
+      lp_auction(prob, 1/(2*n))
       end = time.time()
       lp_auc_time += (end-start)
 
