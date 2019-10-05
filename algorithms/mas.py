@@ -77,10 +77,10 @@ def time_experiment(trials, n, pow_range):
     for j in tqdm(range(trials)):
       prob = assignment_generator(n, M)
       # regular auction algo
-      start = time.process_time()
-      auction(prob, 1/(2*n))
-      end = time.process_time()
-      auc_time += (end-start)
+      # start = time.process_time()
+      # auction(prob, 1/(2*n))
+      # end = time.process_time()
+      # auc_time += (end-start)
 
       # lp auction algo
       start = time.process_time()
