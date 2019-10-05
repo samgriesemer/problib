@@ -83,10 +83,10 @@ def time_experiment(trials, n, pow_range):
       auc_time += (end-start)
 
       # lp auction algo
-      # start = time.process_time()
-      # lp_auction(prob, 1/(2*n))
-      # end = time.process_time()
-      # lp_auc_time += (end-start)
+      start = time.process_time()
+      lp_auction(prob, 1/(2*n))
+      end = time.process_time()
+      lp_auc_time += (end-start)
 
     auc_list.append(auc_time/trials)
     lp_auc_list.append(lp_auc_time/trials)
