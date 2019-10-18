@@ -15,18 +15,3 @@ def inverse_transform(inv_cdf):
 
 def uniform(a,b):
   return random.random()*abs(a-b)+min(a,b)
-
-def normal():
-  pass
-
-def inv_normal():
-  pass
-
-def exponential():
-  pass
-
-def poison():
-  pass
-
-def geometric():
-  pass
