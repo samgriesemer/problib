@@ -5,7 +5,11 @@ import random
 class Product:
   '''Cartesian product of iterables'''
   def __init__(self, *data, repeat=0):
-    '''TODO: address repeat variable'''
+    '''
+    TODO: address repeat variable
+    params: any number of iterables
+    -> data: list of all passed iterables
+    '''
     self.data = data
 
   def count(self):
