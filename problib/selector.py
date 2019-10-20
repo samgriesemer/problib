@@ -1,4 +1,4 @@
-from combinatorics import counting
+from .combinatorics import counting
 
 # define options
 dinner  = ['Salt+Smoke', 'Hopcat', 'J Smuggs', 'Hi-pointe', 'Canes']

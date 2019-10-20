@@ -1,6 +1,6 @@
 import random
 
-from combinatorics.counting import Combination
+from ..combinatorics.counting import Combination
 
 class Distribution():
   def __init__(self, *params):
@@ -57,4 +57,26 @@ class Normal: pass
 
 class Poisson: pass
 
-class Uniform: pass
+class Uniform:
+  def __init__(self, a, b):
+    self.a = a
+    self.b = b
+    self.lower = min(a,b)
+    self.width = abs(a-b)
+
+  def pdf(self, x):
+    '''return pdf(x) = density(x)'''
+    return 1 / self.width
+
+  def cdf(self, x):
+    '''return cdf(x) = Pr(x <= X)'''
+    return (x-self.lower) / self.width
+
+  def quantile(self, x):
+    '''return cdf(x) = Pr(x <= X)'''
+    pass
+
+  def sample(self, n):
+    '''n: number of samples'''
+    for _ in range(n):
+      yield random.random()*self.width+self.lower

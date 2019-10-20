@@ -1,4 +1,4 @@
-from evolution import evolutionary
+from . import evolutionary
 
 class GeneticAlgorithm(evolutionary.Evolutionary):
 

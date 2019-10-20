@@ -1,4 +1,4 @@
-from evolution import *
+from .evolution import *
 
 # can use factory methods or subclassing
 

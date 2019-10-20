@@ -1,4 +1,4 @@
-from probability import bernoulli
+from .probability.distributions import Bernoulli
 
 lotteries = [[[0.8,0.2], [3500,0]], [[0.75,0.25], [4000,0]]]
 players = {'a':0, 'b':1, 'c':0}
@@ -9,7 +9,7 @@ for _ in range(n):
   for (player, choice) in players.items():
     lottery = lotteries[choice]
     p = lottery[0][0]
-    b = bernoulli.Bernoulli(p)
+    b = Bernoulli(p)
     res = next(b.sample())
     results[player].append(lottery[1][1-res])
 

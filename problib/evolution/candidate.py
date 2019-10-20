@@ -1,4 +1,4 @@
-from combinatorics import counting
+from ..combinatorics import counting
 import string
 
 class Candidate:
