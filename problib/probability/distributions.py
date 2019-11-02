@@ -1,7 +1,7 @@
 import random
 import math
 
-from ..combinatorics.counting import  
+from ..combinatorics.counting import Combination
 
 class Distribution():
   def __init__(self, *params):
