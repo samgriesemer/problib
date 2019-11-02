@@ -1,6 +1,7 @@
 import random
+import math
 
-from ..combinatorics.counting import Combination
+from ..combinatorics.counting import  
 
 class Distribution():
   def __init__(self, *params):
@@ -15,11 +16,20 @@ class Distribution():
     pass
 
   def quantile(self, x):
-    '''return cdf(x) = Pr(x <= X)'''
+    '''return cdf^{-1}(p) = [Pr(x <= X) == p]'''
     pass
 
   def sample(self, n):
     '''n: number of samples'''
+    pass
+
+  '''common moments'''
+  def mean(self):
+    '''distribution mean'''
+    pass
+
+  def variance(self):
+    '''distribution variance'''
     pass
 
 class Bernoulli(Distribution):
@@ -36,6 +46,12 @@ class Bernoulli(Distribution):
     for _ in range(n):
       yield 1 if random.random() < self.p else 0
 
+  def mean(self):
+    return self.p
+
+  def variance(self):
+    return self.p*(1-self.p) 
+
 class Binomial(Distribution):
   def __init__(self, n, p):
     self.n = n
@@ -51,11 +67,38 @@ class Binomial(Distribution):
     for _ in range(n):
       yield 1 if random.random() < self.p else 0
 
+  def mean(self):
+    return self.n*self.p
+
+  def variance(self):
+    return self.n* self.p*(1-self.p) 
+
 class Exponential: pass
 
 class Normal: pass
 
-class Poisson: pass
+class Poisson:
+  def __init__(self, lmda):
+    self.lmda = lmda  
+
+  def pdf(self, k):
+    return self.lmda**k*math.e**(-self.lmda)/math.factorial(k)
+
+  def cdf(self, x):
+    pass
+
+  def quantile(self, x):
+    pass
+
+  def sample(self, n):
+    for _ in range(n):
+      yield None
+
+  def mean(self):
+    return self.lmda
+
+  def variance(self):
+    return self.lmda
 
 class Uniform:
   def __init__(self, a, b):
@@ -65,18 +108,20 @@ class Uniform:
     self.width = abs(a-b)
 
   def pdf(self, x):
-    '''return pdf(x) = density(x)'''
     return 1 / self.width
 
   def cdf(self, x):
-    '''return cdf(x) = Pr(x <= X)'''
     return (x-self.lower) / self.width
 
   def quantile(self, x):
-    '''return cdf(x) = Pr(x <= X)'''
     pass
 
   def sample(self, n):
-    '''n: number of samples'''
     for _ in range(n):
       yield random.random()*self.width+self.lower
+
+  def mean(self):
+    return (self.a+self.b)/2
+
+  def variance(self):
+    return self.p*(1-self.p) 
