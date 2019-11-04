@@ -11,8 +11,10 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
       # rank individuals based on current fitness
       self.population.sort(key=lambda x: self.fitness(x), reverse=True)
 
-      print('Generation {}, best candidate: {}, fitness: {}'.format(gen, \
-            self.population[0].epigenesis(), self.fitness(self.population[0])))
+      #print('Generation {}, best candidate: {}, fitness: {}'.format(gen, \
+      #      self.population[0].epigenesis(), self.fitness(self.population[0])))
+
+      yield {'generation': gen, 'candidate': self.population[0].epigenesis()}
 
       # check termination condition
       if self.termination(self.population): 
