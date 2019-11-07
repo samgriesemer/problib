@@ -4,6 +4,8 @@ from .. import crossover
 from .. import mutation
 from .. import candidate
 
+from ...utils.generator import exhaust
+
 def fitness(target):
   def wrapper(candidate):
     value = 0
@@ -26,4 +28,6 @@ if __name__ == '__main__':
   sim.mutation = mutation.alterchar
   sim.fitness = fitness(target)
   sim.termination = termination(target)
-  sim.run()
+  
+  # run simulation
+  print(exhaust(sim.run(), interval=500))
