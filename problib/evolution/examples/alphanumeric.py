@@ -22,7 +22,7 @@ def termination(target):
 
 if __name__ == '__main__':
   target = 'abcdefghijklmnopqrstuvwxyz'
-  sim = genetic.GeneticAlgorithm(100, 15000, 0.66, candidate.AlphaString, [26])
+  sim = genetic.GeneticAlgorithm(100, 15000, 0.66, candidate.AlphaString, {'length':26})
   sim.selection = selection.roulette
   sim.crossover = crossover.single_point
   sim.mutation = mutation.alterchar
@@ -30,4 +30,4 @@ if __name__ == '__main__':
   sim.termination = termination(target)
   
   # run simulation
-  print(exhaust(sim.run(), interval=500))
+  exhaust(sim.run(), interval=500)

@@ -36,7 +36,7 @@ class Evolutionary:
 
   def create_population(self):
     for _ in range(self.population_size):
-      self.population.append(self.candidate.random(*self.cand_params))
+      self.population.append(self.candidate.random(**self.cand_params))
 
   def run(self):
     '''
