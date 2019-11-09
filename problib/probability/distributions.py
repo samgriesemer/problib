@@ -58,19 +58,47 @@ class Bernoulli(Distribution):
     return self.p*(1-self.p) 
 
 class Binomial(Distribution):
+  '''
+  consider indexing probabilities at different
+  values for later access. precompute could be cheap
+  and save time later, or could expensive and never
+  really used. have to compare the options
+  '''
+
   def __init__(self, n, p):
     self.n = n
     self.p = p
+    self._cdf = {}
 
   def pdf(self, x):
-    return Combination.nCk(self.n, x)*self.p**x*(1-self.p)**(n-x)
+    return Combination.nCk(self.n, x)*self.p**x*(1-self.p)**(self.n-x)
 
-  def cdf(self, x):
-    return (1-self.p)**(1-int(x))
+  def cdf(self, x, index=False):
+    '''iteratively (naively) compute
+    P(X <= x)'''
+    p = 0
+    for i in range(int(x)+1):
+      if i == self.n: p = 1
+      else: p += self.pdf(i)
+      if index:
+        self._cdf[i] = p
+    return p
 
   def sample(self, n=1):
+    '''
+    naive implementation (for now). meant to be used
+    with relatively small n. consider poisson
+    sampling for sufficiently large n
+    '''
+    # index entire cdf
+    if self.n not in self._cdf:
+      self.cdf(self.n, index=True)
+
     for _ in range(n):
-      yield 1 if random.random() < self.p else 0
+      r = random.random()
+      for x in self._cdf:
+        if self._cdf[x] >= r: break 
+      yield x
 
   def mean(self):
     return self.n*self.p
