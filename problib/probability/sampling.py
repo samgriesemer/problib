@@ -13,5 +13,10 @@ def inverse_transform(inv_cdf):
   r = random.random()
   return inv_cdf(r)
 
-def uniform(a,b):
-  return random.random()*abs(a-b)+min(a,b)
+#def discrete_inverse_transform(cdf):
+#  '''general naive implementation'''
+#  def inv(p):
+#    x = 0
+#    for i in range(x):
+#      p +=  
+  
