@@ -4,6 +4,8 @@ from .. import crossover
 from .. import mutation
 from .. import candidate
 
+from ...utils.generator import exhaust
+
 def fitness(target):
   def wrapper(candidate):
     value = 0
@@ -20,10 +22,12 @@ def termination(target):
 
 if __name__ == '__main__':
   target = 'abcdefghijklmnopqrstuvwxyz'
-  sim = genetic.GeneticAlgorithm(100, 15000, 0.66, candidate.AlphaString, [26])
+  sim = genetic.GeneticAlgorithm(100, 15000, 0.66, candidate.AlphaString, {'length':26})
   sim.selection = selection.roulette
   sim.crossover = crossover.single_point
   sim.mutation = mutation.alterchar
   sim.fitness = fitness(target)
   sim.termination = termination(target)
-  sim.run()
+  
+  # run simulation
+  exhaust(sim.run(), interval=500)

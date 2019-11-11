@@ -4,6 +4,11 @@ import math
 from ..combinatorics.counting import Combination
 
 class Distribution():
+  '''
+  Consider extending base class to Continuous and Discrete subclasses.
+  There are some slight differences that might matter to the API (e.g.
+  "pdf" vs "pmf")
+  '''
   def __init__(self, *params):
     self.params = params
 
@@ -23,7 +28,7 @@ class Distribution():
     '''n: number of samples'''
     pass
 
-  '''common moments'''
+  '''common moments (consider making @property)'''
   def mean(self):
     '''distribution mean'''
     pass

@@ -4,6 +4,8 @@ from .. import crossover
 from .. import mutation
 from .. import candidate
 
+from ...utils.generator import exhaust
+
 class OneMax(genetic.GeneticAlgorithm):
   
   def fitness(self, candidate):
@@ -14,4 +16,6 @@ if __name__ == '__main__':
   sim.selection = selection.roulette
   sim.crossover = crossover.single_point
   sim.mutation = mutation.bitflip
-  sim.run()
+
+  # consider if this is the best approach
+  print(exhaust(sim.run(), interval=500))

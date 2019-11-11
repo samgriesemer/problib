@@ -36,7 +36,14 @@ class Evolutionary:
 
   def create_population(self):
     for _ in range(self.population_size):
-      self.population.append(self.candidate.random(*self.cand_params))
+      self.population.append(self.candidate.random(**self.cand_params))
 
   def run(self):
+    '''
+    Run evolutionary simulation, after class setup has been completed.
+    Implementation will vary based on subclassing type. General approach
+    will iterate until termination condition met, evaluating, selection,
+    breeding, and mutating a population of candidates. Generator yielding
+    generation specific details is encouraged functional form.
+    '''
     raise NotImplementedError
