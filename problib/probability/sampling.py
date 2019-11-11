@@ -20,3 +20,5 @@ def inverse_transform(inv_cdf):
 #    for i in range(x):
 #      p +=  
   
+def rejection_sampling(): pass
+def importance_sampling(): pass
