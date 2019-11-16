@@ -13,9 +13,11 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
 
       # yield generation specific details
       top_candidate = self.population[0]
-      yield {'generation': gen, 
+      bot_candidate = self.population[-1]
+      yield {'generation'    : gen, 
              'best_candidate': top_candidate.epigenesis(),
-             'best_fitness': self.fitness(top_candidate)}
+             'best_fitness'  : self.fitness(top_candidate),
+             'worst_fitness' : self.fitness(bot_candidate)}
 
       # check termination condition
       if self.termination(self.population): 
