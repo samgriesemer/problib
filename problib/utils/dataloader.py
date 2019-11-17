@@ -1,6 +1,9 @@
 class DataLoader:
-  def __init__(self, path):
+  def __init__(self, path, batch_size):
     self.path = path
+    self.batch_size
+
+    self.load()
 
   def load(self):
     # return iterator over dataset files
