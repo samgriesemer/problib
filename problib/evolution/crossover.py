@@ -7,3 +7,10 @@ def single_point(parent1, parent2):
   start, stop = min(begin, end), max(begin, end)
   child[start:stop] = parent2.genotype[start:stop]
   return child
+
+def multipoint(parent1, parent2):
+  '''Generalizes single point crossover, could make redundant'''
+  pass
+
+def weight_slice(net1, net2):
+  return net1

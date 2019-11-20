@@ -1,27 +1,6 @@
 import numpy as np
 
 def fit(X, Y, w, l, predict=False):
-  w_grad = ([(np.zeros(np.shape(w[i]))) for i in range(len(w))])
-  a = X
-  A = []
-
-  # forward propagate
-  for i in range(len(w)):
-    ones = np.reshape(np.ones(len(a)), (-1,1))
-    a = np.append(ones, a, 1)
-    A.append(a)
-    z = np.dot(a, w[i].T)
-    a = sigmoid(z)
-  if predict: return a
-
-  # backpropagate
-  delta = a - Y
-  w_grad[-1] += np.dot(delta.T, A[-1])
-  for i in reversed(range(1, len(w))):
-    delta = delta[:,1:] if i != len(w)-1 else delta
-    delta = np.multiply(np.dot(delta, w[i]), s_prime(A[i]))
-    w_grad[i-1] += np.dot(delta[:,1:].T, A[i-1])
-
   # regularization
   for i in range(len(w)):
     w_grad[i] /= len(X)
