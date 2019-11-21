@@ -10,26 +10,20 @@ from ...utils.generator import exhaust
 class GridNE(genetic.GeneticAlgorithm):
   '''Neuroevolution implementation'''
   def fitness(self, candidate):
+    aid = id(candidate)
     net = candidate.epigenesis()
-    obs = self.obs[id(candidate)]
+    obs = self.obs[aid]
     res = net.predict(obs)
+    self.action.append({'aid':aid,'val':res})
     return -(obs-res)**2
 
   def run(self):
     # initialize genetic process and gym environment
-    self.gym = gym.Grid(100, 100, [-3,3], [-3,3])
     self.obs = self.gym.start()
 
     # main NE loop
     for gendata in super().run():
       action = []
-
-      # update gym agents
-      for candidate in gendata['new_candidates']:
-        self.gym.register_agent(candidate)
-
-      for candidate in gendata['old_candidates']:
-        self.gym.remove_agent(candidate)
 
       # get current agent actions
       for candidate in self.population:
@@ -44,7 +38,8 @@ class GridNE(genetic.GeneticAlgorithm):
       yield {'gen':gendata, 'state':self.obs}
 
 if __name__ == '__main__':
-  sim = SimpleNE(100, 10000, 0.2, candidate.NeuralNetwork, {'layers':[6,5,4]})
+  env = gym.Grid(100, 100, [-3,3], [-3,3])
+  sim = GridNE(100, 10000, 0.2, candidate.NeuralNetwork, {'layers':[6,5,4]}, env)
   sim.selection = selection.roulette
   sim.crossover = crossover.weight_slice
   sim.mutation = mutation.alter_weight

@@ -1,6 +1,6 @@
 from . import physics
 
-class GymBase():
+class Gym():
   '''Base gym class, outlines simple tick and game loop methods'''
   def __init__(self):
     self.state = None
@@ -15,10 +15,13 @@ class GymBase():
 
   def loop(self, ticks):
     '''Return gym loop, generator over specified numer of ticks'''
-    for _ in range(ticks): 
+    for _ in range(ticks):
       yield tick()
 
-class Grid(GymBase):
+class MultiAgentGym(Gym):
+  pass
+
+class Grid(Gym):
   '''
   Naive implementation, simple velocity and position
   updates on body of defined point objects. Action space

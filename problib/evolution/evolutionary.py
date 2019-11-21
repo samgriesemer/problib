@@ -11,6 +11,7 @@ class Evolutionary:
     self.cand_params = cand_params
     self.num_offspring = 1
     self.gym = gym
+    self.action = []
 
   def fitness(self, candidate):
     '''Fitness function for evaluating candidate quality'''
@@ -38,7 +39,14 @@ class Evolutionary:
 
   def create_population(self):
     for _ in range(self.population_size):
-      self.population.append(self.candidate.random(**self.cand_params))
+      # create random candidate from given params
+      cand = self.candidate.random(**self.cand_params)
+
+      # add candidate to population
+      self.population.append(cand)
+
+      # register agent in gym if applicable
+      if self.gym: self.gym.register_agent(cand)
 
   def run(self):
     '''
