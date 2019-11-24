@@ -1,9 +1,10 @@
 import string
 
+from ..simulation.gym.agent import Agent
 from ..combinatorics import counting
 from ..ml import nn
 
-class Candidate:
+class Candidate(Agent):
   '''
   Base candidate class for evolutionary algorithms
   NOTE: can always consider switching the constructor to
@@ -17,9 +18,17 @@ class Candidate:
   Want to separate candidate from agent. Candidates dont need to be 
   defined in the context of a gym evnironment. They just hold a genotype
   and inherit the basic functions seen in base
+
+  UPDATE: candidates ARE agents. They NEED to be defined in the context
+  of a gym environment, as there must be a way of evaluating the candidates
+  in an objective manner. This environment can be completely static, but
+  the point is that it provides context for evaluating fitness. Canddiates
+  are to inherit the same methods as any agent, but have the additional
+  `genotype` attribute which holds their internal representation in the
+  context of a genetic algorithm process. 
   '''
   def __init__(self, genotype):
-    #create(**kwargs)
+    super().__init__()
     self.genotype = genotype
 
   def __str__(self):
@@ -121,7 +130,7 @@ class NeuralNetwork(Candidate):
     net = nn.NeuralNetwork.from_weights(self.genotype)
     return net
 
-  def predict(self, x):
+  def act(self, obs):
     net = self.epigenesis()
     data = [x[prop] for prop in ['px','py','vx','vy','ax','ay']]
     return net.predict(np.array(data))

@@ -4,13 +4,13 @@ import random
 
 class Product:
   '''Cartesian product of iterables'''
-  def __init__(self, *data, repeat=0):
+  def __init__(self, *data, repeat=1):
     '''
-    TODO: address repeat variable
+    TODO: address repeat variable in more efficient manner (i.e. dont repeat explicitly in memory)
     params: any number of iterables
     -> data: list of all passed iterables
     '''
-    self.data = data
+    self.data = data*repeat
 
   def count(self):
     '''Compute number of elements in product'''
@@ -23,18 +23,22 @@ class Product:
     return itertools.product(*self.data)
 
   def sample(self, m=1):
-    '''Randomly generate a sample(s) from the product'''
+    '''Randomly generate m samples from the product'''
     for _ in range(m):
       yield tuple(random.choice(exp) for exp in self.data)
 
   def sample_without_replacement(self, m=1):
-    '''Randomly generate m unique samples from the product'''
+    '''
+    Randomly generate m unique samples from the product. If m
+    greater than the number of possibles samples, return as
+    many as possible.
+    '''
     if m > self.count(): return None
-    generated = []
+    generated = set()
     while len(generated) < m:
       gtuple = next(self.sample(1))
       if gtuple not in generated:
-        generated.append(gtuple)
+        generated.add(gtuple)
         yield gtuple
 
 class Permutation:
