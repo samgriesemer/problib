@@ -58,7 +58,7 @@ class Gym():
 
         # create id generator
         chars = string.printable[:61]
-        self.idgen = Product(chars, repeat=4).sample_without_replacement(-1)
+        self.idgen = Product(chars, repeat=6).sample_without_replacement(-1)
 
         # register any initial agents
         self.update_agents(agents)
@@ -122,9 +122,19 @@ class PhysicsGym(Gym):
         super().__init__(env, agents)
 
     def tick(self):
+        '''
+        Addressing problem of newly added agents not being represented
+        in currently held state. For now iterate over eid's directly
+        as opposed to all gym agents, i.e. only agents recognized by
+        environment
+        '''
         action = {}
         for aid, agent in self.agents.items():
             eid = self.registry[aid]
+
+            # simple check for agent in current state
+            if eid not in self.state: continue
+
             action[eid] = agent.act(self.state[eid], self.reward[eid])
         self.state, self.reward = self.env.tick(action)
 
