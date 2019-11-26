@@ -32,10 +32,16 @@ class Product:
     Randomly generate m unique samples from the product. If m
     greater than the number of possibles samples, return as
     many as possible.
+    TODO: can implement approaches described in blog analysis.
+    Iterative resampling is cheap early, but expensive later.
+    Can attempt to dynamically implement both strategies for
+    optimal performance.
+    Decide on usage for never ending generator; for now loop
+    change allows negative values to work.
     '''
     if m > self.count(): return None
     generated = set()
-    while len(generated) < m:
+    while len(generated) != m:
       gtuple = next(self.sample(1))
       if gtuple not in generated:
         generated.add(gtuple)

@@ -27,7 +27,7 @@ class Agent():
         # internal model, stores "internal agent state" 
         self.model = {}
 
-        # current raw state from env
+        # current raw state from env (reconsider use of state for env and more internal agent vars)
         self.state = {}
 
         # internal interpretation of current env state
@@ -47,9 +47,9 @@ class Agent():
         '''
         Interal method to be called by `act()` for interpretting incoming state.
         Can be static and simple store the incoming state, or perform some sort
-        of sensory analysis on the state as many mnay agents must do in order
-        to properly understand and parse the environmental state. Sets the agent's
-        `obs` variable to this processed/interpretted state.
+        of sensory analysis on the state as many agents must do in order to properly
+        understand and parse the environmental state (i.e. apply any internal attention
+        mechanisms). Sets the agent's `obs` variable to this processed/interpretted state.
         '''
         # by default, observe the entire raw state
         self.obs = self.state 
@@ -61,6 +61,16 @@ class Agent():
         prior to the next generated action.
         '''
         pass
+
+    def action(self):
+        '''
+        Test addition to model. Goal is be separate from main act entry point and
+        remain consistent with other methods acting on internal params. Also allows
+        subclasses to override this method completely, without worrying about
+        anything other than the internal state available.
+        TODO: evaluate if this method should remain.
+        '''
+        return self.obs
 
     def act(self, state, reward):
         '''
@@ -85,6 +95,9 @@ class Agent():
 
         # update internal model
         self.update()
+
+        # generate and return action
+        return self.action()
 
         '''
         implement some decision process and return an action

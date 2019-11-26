@@ -36,10 +36,10 @@ class Env():
         pass
 
 class SingleAgentEnv(Env):
-        pass
+    pass
 
 class MultiAgentEnv(Env):
-        pass
+    pass
 
 class Grid(Env):
     '''
@@ -75,10 +75,10 @@ class Grid(Env):
 
     @property
     def state(self):
-        return {aid: self.engine.entities[eid].__dict__ for aid, eid in self.registry.items()}
+        return self.engine.entity_arrays()
 
     def start(self):
-        return self.state
+        return self.state, self.state
 
     def tick(self, actions):
         '''
@@ -87,20 +87,20 @@ class Grid(Env):
         to be performed by each agent at the current step
 
         :actions: list of actions in form {'action':<str>, 'aid':<int>, value:{'x':<int>, 'y':<int>}}
+        :actions: numpy array of four needed values
         ::known actions:: ['setv']
         '''
         # update entities and agents
-        for action in actions:
-            eid       = self.registry[action['aid']]
+        for eid, action in actions.items():
             entity    = self.engine.entities[eid]
-            entity.vx = self.clip(action['val']['vx'], self.vxrng)
-            entity.vy = self.clip(action['val']['vy'], self.vyrng)
-            entity.ax = self.clip(action['val']['ax'], self.axrng)
-            entity.ay = self.clip(action['val']['ay'], self.ayrng)
+            entity.vx = self.clip(action[0], self.vxrng)
+            entity.vy = self.clip(action[1], self.vyrng)
+            entity.ax = self.clip(action[2], self.axrng)
+            entity.ay = self.clip(action[3], self.ayrng)
 
         # call physics tick
         self.engine.tick()
-        return self.state
+        return self.state, self.state
 
     def random_entity(self):
         '''return entity ID so we know how pass actions back to the env'''
@@ -115,3 +115,4 @@ class Grid(Env):
 
     def clip(self, val, rng):
         return min(max(val, rng[0]), rng[1])
+

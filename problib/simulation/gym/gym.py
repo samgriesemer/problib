@@ -38,6 +38,11 @@ class Gym():
     id()s will likely be preserved correctly, and the mapping will hold both ways.
     This doesn't necessarily make anything better for us now, but it could reduce
     the external modification required to set agent ids.
+
+    Consider how agent actions sync up with environment ticks. Should the agent
+    control the immediate next tick, or should it observe the state that will be
+    used to update the next state before actions are applied (i.e. just difference
+    in whether actions are applied before or after tick updates).
     '''
     def __init__(self, env, agents=[]):
         # set environment and record variables
@@ -53,7 +58,7 @@ class Gym():
 
         # create id generator
         chars = string.printable[:61]
-        self.idgen = Product(chars, repeat=4).sample_without_replacement()
+        self.idgen = Product(chars, repeat=4).sample_without_replacement(-1)
 
         # register any initial agents
         self.update_agents(agents)
@@ -66,10 +71,10 @@ class Gym():
 
     def run(self, gens=-1):
         gen = 0
-        self.state = self.env.start()
+        self.state, self.reward = self.env.start()
         while gen != gens:
             self.tick()
-            yield {'gen':gen}
+            yield {'gen':gen, 'state':self.state}
             gen += 1
 
     def register_agent(self, agent):
@@ -116,7 +121,17 @@ class PhysicsGym(Gym):
         # perform standard gym initialization
         super().__init__(env, agents)
 
+    def tick(self):
+        action = {}
+        for aid, agent in self.agents.items():
+            eid = self.registry[aid]
+            action[eid] = agent.act(self.state[eid], self.reward[eid])
+        self.state, self.reward = self.env.tick(action)
+
     def register_agent(self, agent):
+        # check if agent already in gym
+        if agent.id in self.agents: return
+
         super().register_agent(agent)
         
         # create entity for agent
@@ -127,16 +142,17 @@ class PhysicsGym(Gym):
 
     def remove_agent(self, agent):
         super().remove_agent(agent)
-        self.env.remove_entity(self.registry[aid])
-        self.registry.pop(aid)
+        self.env.remove_entity(self.registry[agent.id])
+        self.registry.pop(agent.id)
 
     def update_agents(self, agents):
         '''
         act explicitly for now, could implement "update" pattern
         through env and into engine
+        UPDATE: turned into decent solution, no longer mega slow
+        list lookup. Still consider above remark
         '''
         super().update_agents(agents)
         for aid in self.registry.keys():
-            if aid not in agents:
-                self.env.remove_entity(self.registry[aid])
-                self.registry.pop(aid)
+            if aid not in self.agents:
+                self.remove_agent(self.registry[aid])
