@@ -2,11 +2,11 @@ import random
 
 class Evolutionary:
   '''Base evolutionary algorithm class'''
-  def __init__(self, population_size, num_generations, mutation_rate, candidate, cand_params, gym=None):
+  def __init__(self, population_size, num_generations, mutation_params, candidate, cand_params, gym=None):
     self.population = []
     self.population_size = population_size
     self.num_generations = num_generations
-    self.mutation_rate = mutation_rate
+    self.mutation_params = mutation_params
     self.candidate = candidate
     self.cand_params = cand_params
     self.num_offspring = 1

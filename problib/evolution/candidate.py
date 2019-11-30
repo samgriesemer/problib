@@ -138,6 +138,9 @@ class NeuralNetwork(Candidate):
         net = nn.NeuralNetwork.from_weights(self.genotype)
         return net
 
+    def update(self):
+        self.time_alive += 1
+
     def action(self):
         net = self.epigenesis()
         return net.predict(self.state)[0]

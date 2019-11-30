@@ -2,36 +2,42 @@ from . import evolutionary
 
 class GeneticAlgorithm(evolutionary.Evolutionary):
     '''
-    Standard genetic algorithm (in a way, the genetic algo is
-    itself an agent, taking states, maintaining internal representation,
+    Standard genetic algorithm (in a way, the genetic algo is itself
+    an agent, taking states, maintaining internal representation,
     reacting and responding to the environment
     '''
     def run(self):
-        # initialize population of canidates
+        # initialize population of candidates
         self.create_population()
-        self.obs = self.gym.start()
+        self.gym.start()
 
         # begin generation loop
         for gen in range(self.num_generations):
+            # execute actions and get new gym state
+            self.gym.tick()
+
             # rank individuals based on current fitness
-            self.action = []
             self.population.sort(key=lambda x: self.fitness(x), reverse=True)
+
+            # balance population size
+            self.population = self.population[:self.population_size]
+
+            # maintain gym agent registry
+            self.gym.update_agents(self.population)
+            self.gym.refresh_state()
 
             # yield generation specific details
             top_candidate = self.population[0]
             bot_candidate = self.population[-1]
             yield {'generation'    : gen,
-                   'best_candidate': top_candidate.epigenesis(),
+                   'best_candidate': str(top_candidate.epigenesis()),
                    'best_fitness'  : self.fitness(top_candidate),
-                   'worst_fitness' : self.fitness(bot_candidate)}
+                   'worst_fitness' : self.fitness(bot_candidate),
+                   'state'         : self.gym.state}
 
             # check termination condition
             if self.termination(self.population):
                 return self.population[0]
-
-            # execute actions and get new state
-            if self.gym:
-                self.obs = self.gym.step(self.action)
 
             # consider multiple offspring per generation
             for _ in range(self.num_offspring):
@@ -44,14 +50,8 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
                 child = self.candidate(child_genotype)
 
                 # perform (possible) mutations on child
-                self.mutation(child, self.mutation_rate)
+                self.mutation(child, **self.mutation_params)
 
-                # add child to population if suitable
-                if self.fitness(child) > self.fitness(self.population[-1]):
-                    # maintain gym agent registry
-                    if self.gym:
-                        self.gym.remove_agent(self.population[-1])
-                        self.gym.register_agent(child)
-
-                    # replace worst candidate with child
-                    self.population[-1] = child
+                # add child to population, gym for next round eval
+                self.population.append(child)
+                self.gym.register_agent(child)

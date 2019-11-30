@@ -9,7 +9,7 @@ class NeuralNetwork(model.Model):
     from model base, uses sigmoid activations.
     Additional flexibility to be added soon.
     '''
-    def __init__(self, layers, epsilon=1, lmda=1, weights=[]):
+    def __init__(self, layers, epsilon=1, lmda=1, weights=None):
         # set internal parameters
         self.layers = layers
         self.epsilon = epsilon
@@ -20,9 +20,13 @@ class NeuralNetwork(model.Model):
         # convenient constants
         self.L = len(layers)
         
-        # hack for now
-        if not weights:
-            self.init_weights(layers, epsilon)
+        # hack for now (as opposed to std non-rand init)
+        if weights is None:
+            self.weights = []
+            self.init_weights()
+
+    def __str__(self):
+        return str(self.layers)
 
     @classmethod
     def from_weights(cls, weights):
@@ -32,7 +36,7 @@ class NeuralNetwork(model.Model):
         layers.append(block.shape[0])
         return cls(layers, weights=weights)
 
-    def init_weights(self, layers, epsilon):
+    def init_weights(self):
         for i in range(self.L-1):
             # create weight state
             shape = (self.layers[i+1], self.layers[i]+1)

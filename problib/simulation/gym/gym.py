@@ -19,6 +19,18 @@ class Gym():
     are taken for the tick method, meaning the client doesnt have to worry about
     passing in env states, actions, rewards, etc; this exchange occurs internally.
 
+    Note also that local representation of env state is not automatically queried
+    after agent modifications are made. This is to prevent unnecessary computation
+    in the case the client expects to make a series of agent updates and needs access
+    to new state immediately (otherwise the changes will be propogated through at the
+    next tick). TODO: this functationality should be important and known, that newly
+    created agents have the ability to act before the next state i.e. at the next tick,
+    and will other be missing a round if not taken care of. This shouldn't be a problem
+    inside Gym, however, as the agent is immediately added to the internal registry
+    and will be asked for an action at the next gym tick (although measures may be in
+    place to filter out those agents not represented by the state, it's simply a matter
+    of choice for the implementing gym).
+
     TODO: address agent constancy, even for agents that have been removed from
     active storage but may exist in the history. Imagine a dormant agent in some
     external sim that is never deleted, but re-enters the spotlight after some time.
@@ -43,6 +55,9 @@ class Gym():
     control the immediate next tick, or should it observe the state that will be
     used to update the next state before actions are applied (i.e. just difference
     in whether actions are applied before or after tick updates).
+
+    Consider something like a `agent_state(agent)` method for grabbing state
+    representation for given agent. Could reducde varying env/gym friction.
     '''
     def __init__(self, env, agents=[]):
         # set environment and record variables
@@ -60,22 +75,32 @@ class Gym():
         chars = string.printable[:61]
         self.idgen = Product(chars, repeat=6).sample_without_replacement(-1)
 
+        # additional variables
+        self.gen = 0
+
         # register any initial agents
         self.update_agents(agents)
 
     def tick(self):
         action = {}
+        self.gen += 1
+        
+        # hot fix for adaptive agent registry, remove in future
+        self.state = self.env.state
+
         for aid, agent in self.agents.items():
             action[aid] = agent.act(self.state, self.reward)
         self.state, self.reward = self.env.tick(action)
 
+    def start(self):
+        self.state = self.env.state
+
     def run(self, gens=-1):
-        gen = 0
-        self.state, self.reward = self.env.start()
-        while gen != gens:
+        self.start()
+        while self.gen != gens:
             self.tick()
-            yield {'gen':gen, 'state':self.state}
-            gen += 1
+            yield {'gen'  : self.gen,
+                   'state': self.state}
 
     def register_agent(self, agent):
         # check if agent already in gym
@@ -108,6 +133,10 @@ class Gym():
             temp[agent.id] = agent
         self.agents = temp
 
+    def agent_state(self, agent):
+        return self.state[agent.id]
+
+
 class PhysicsGym(Gym):
     '''
     Extend standard Gym interface by adding physics entity-agent
@@ -117,6 +146,9 @@ class PhysicsGym(Gym):
     def __init__(self, env, agents=[]):
         # create internal agent-entity registry
         self.registry = {}
+
+        # agent change tracker
+        self.fresh_state = False
         
         # perform standard gym initialization
         super().__init__(env, agents)
@@ -129,14 +161,20 @@ class PhysicsGym(Gym):
         environment
         '''
         action = {}
+        self.gen += 1
+
+        # refresh internal state to match agent-entity changes
+        self.refresh_state()
+
         for aid, agent in self.agents.items():
             eid = self.registry[aid]
 
             # simple check for agent in current state
             if eid not in self.state: continue
 
-            action[eid] = agent.act(self.state[eid], self.reward[eid])
+            action[eid] = agent.act(self.state[eid], None)
         self.state, self.reward = self.env.tick(action)
+        self.fresh_state = True
 
     def register_agent(self, agent):
         # check if agent already in gym
@@ -149,11 +187,13 @@ class PhysicsGym(Gym):
 
         # store entity-agent pair in registry
         self.registry[agent.id] = eid
+        self.fresh_state = False
 
     def remove_agent(self, agent):
         super().remove_agent(agent)
         self.env.remove_entity(self.registry[agent.id])
         self.registry.pop(agent.id)
+        self.fresh_state = False
 
     def update_agents(self, agents):
         '''
@@ -163,6 +203,17 @@ class PhysicsGym(Gym):
         list lookup. Still consider above remark
         '''
         super().update_agents(agents)
-        for aid in self.registry.keys():
+        for aid, eid in self.registry.copy().items():
             if aid not in self.agents:
-                self.remove_agent(self.registry[aid])
+                self.env.remove_entity(eid)
+                self.registry.pop(aid)
+        self.fresh_state = False
+
+    def refresh_state(self):
+        if not self.fresh_state:
+            self.state = self.env.state
+            self.fresh_state = True
+
+    def agent_state(self, agent):
+        eid = self.registry[agent.id]
+        return self.state[eid] 

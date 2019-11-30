@@ -1,9 +1,9 @@
 import random
 
 def mutation_decorator(mutate):
-  def wrapper(candidate, rate):
+  def wrapper(candidate, rate, **kwargs):
     if random.random() < rate:
-      mutate(candidate)
+      mutate(candidate, **kwargs)
   return wrapper
 
 @mutation_decorator
@@ -21,6 +21,15 @@ def alterchar(candidate):
   gene[rand] = chr(ord(gene[rand]) + random.choice([-1, 1]))
 
 @mutation_decorator
-def alter_weight(candidate):
-  '''random modify real numbers'''
-  pass
+def alter_weight(candidate, rng):
+  '''
+  Modify real numbers uniformly at random from a 
+  NeuralNetwork weight vector
+  '''
+  weights = candidate.genotype
+  layer = random.randint(0,len(weights)-1)
+  shape = weights[layer].shape
+  i, j = random.randint(0,shape[0]-1), random.randint(0,shape[1]-1)
+  weights[layer][i,j] += random.uniform(-rng, rng)
+
+  

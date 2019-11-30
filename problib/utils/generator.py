@@ -28,11 +28,9 @@ def chunk(gen, n, last=True):
   such that if <n> items have not arrived from the
   original generator in <t> seconds, return the 
   current chunk. Could protect against long running,
-  async generator processes
-
-  TODO: move to problib
+  async generator processes (and may be useful for
+  time dependent physics sims)
   '''
-
   chunk = []
   for item in gen:
     chunk.append(item)

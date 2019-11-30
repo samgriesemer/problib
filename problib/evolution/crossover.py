@@ -1,6 +1,10 @@
 import random
 
 def single_point(parent1, parent2):
+  '''
+  General single point crossover method for any two
+  iterables of the same length
+  '''
   child = parent1.genotype.copy()
   begin = random.randint(0, len(child) - 1)
   end = random.randint(0, len(child) - 1)

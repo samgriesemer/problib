@@ -4,45 +4,40 @@ from .. import crossover
 from .. import mutation
 from .. import candidate
 
-from ...simulation import gym
+from problib.simulation.gym import env
+from problib.simulation.gym import gym
+
 from ...utils.generator import exhaust
 
-class GridNE(genetic.GeneticAlgorithm):
-  '''Neuroevolution implementation'''
-  def fitness(self, candidate):
-    aid = id(candidate)
-    net = candidate.epigenesis()
-    obs = self.obs[aid]
-    res = net.predict(obs)
-    self.action.append({'aid':aid,'val':res})
-    return -(obs-res)**2
+class PhysicsNE(genetic.GeneticAlgorithm):
+    '''Neuroevolution implementation'''
+    def fitness(self, candidate):
+        # assumes env has just been ticked
+        state = self.gym.agent_state(candidate)
 
-  def run(self):
-    # initialize genetic process and gym environment
-    self.obs = self.gym.start()
-
-    # main NE loop
-    for gendata in super().run():
-      action = []
-
-      # get current agent actions
-      for candidate in self.population:
-        aid = id(candidate)
-        val = candidate.predict(self.obs[aid])
-        action.append({'aid':aid, 'val':val})
-
-      # send actions to gym
-      self.obs = self.gym.step(action)
-
-      # yield NE metadata and gym state
-      yield {'gen':gendata, 'state':self.obs}
+        # penalize agents for being far from center
+        dx = self.gym.env.width/2 - state[0]
+        dy = self.gym.env.height/2 - state[1]
+        return -(dx**2 + dy**2)**(5/4)+candidate.time_alive**2
 
 if __name__ == '__main__':
-  env = gym.Grid(100, 100, [-3,3], [-3,3])
-  sim = GridNE(100, 10000, 0.2, candidate.NeuralNetwork, {'layers':[6,5,4]}, env)
-  sim.selection = selection.roulette
-  sim.crossover = crossover.weight_slice
-  sim.mutation = mutation.alter_weight
+    grid = env.Grid(100, 100, [-3,3], [-3,3])
+    sgym = gym.PhysicsGym(grid)
 
-  # consider if this is the best approach
-  exhaust(sim.run(), interval=500)
+    params = {
+        'population_size': 100,
+        'num_generations': 150000,
+        'mutation_params': {'rate':0.5, 'rng':0.5},
+        'candidate'      : candidate.NeuralNetwork,
+        'cand_params'    : {'layers':[6,5,4]},
+        'gym'            : sgym,
+    }
+
+    sim = PhysicsNE(**params)
+    sim.selection = selection.roulette
+    sim.crossover = crossover.single_point
+    sim.mutation = mutation.alter_weight
+
+    # consider if this is the best approach
+    exhaust(sim.run(), interval=200)
+

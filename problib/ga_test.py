@@ -33,11 +33,11 @@ toolbox.register("crossover", crossover.single_point)
 params = {
   'population_size': 100,
   'num_generations': 10,
-  'mutation_rate': 0.1,
-  'candidate': candidate.AlphaString,
-  'fitness': fitness,
-  'selection': selection.roulette,
-  'crossover': crossover.single_point,
+  'mutation_rate'  : 0.1,
+  'candidate'      : candidate.AlphaString,
+  'fitness'        : fitness,
+  'selection'      : selection.roulette,
+  'crossover'      : crossover.single_point,
 }
 
 ge = genetic.GeneticAlgorithm(**params)

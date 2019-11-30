@@ -7,10 +7,10 @@ class Env():
     should inherit this interface. Need to provide a state and action space
     for defining valid actions and return states.
     '''
-    def __init__(self):
+    def __init__(self, state=None, engine=None):
         # define internal tracking variables
-        self.state = None
-        self.engine = None
+        self.state = state
+        self.engine = engine
 
         # define spaces
         #self.state_space  = space.State()
@@ -24,7 +24,7 @@ class Env():
         exactly as intended due realistic limitations). Resulting environment state
         is returned.
         '''
-        return self.state
+        return self.state, None
 
     def draw(self):
         '''
@@ -41,12 +41,26 @@ class SingleAgentEnv(Env):
 class MultiAgentEnv(Env):
     pass
 
+class StaticContext(Env):
+    '''
+    Official environment for defining a static state. To be used as a simple Env
+    object inheriting necessary interface when only some context is needed. Does
+    nothing to the base class.
+    '''
+
+
 class Grid(Env):
     '''
     Naive implementation, simple velocity and position
     updates on body of defined point objects. Action space
     includes all real number within velocity ranges, and the state
     is the current set of physics entities and their 2D positions.
+
+    For now, the state (method) property is not resitricted and is
+    encouraged to update state after entity creation/removal has occurred.
+    No other entity state's are affected, so no standard implementation
+    should expect any side effects. Ultimately this may need reconsideration,
+    but it has backing as explained in the docs.
     '''
     def __init__(self, width, height, vxrng, vyrng, axrng=[0,0], ayrng=[0,0], entities=[]):
         # set initial entities (to be formalized later)
@@ -80,7 +94,7 @@ class Grid(Env):
     def start(self):
         return self.state, self.state
 
-    def tick(self, actions):
+    def tick(self, actions={}):
         '''
         Handles action requests to engine entities, returns resulting
         state. Note for multi-agent systems, `action` is a list of actions
@@ -102,6 +116,13 @@ class Grid(Env):
         self.engine.tick()
         return self.state, self.state
 
+    def run(self, gens=-1):
+      yield {'state':self.start()[0]}
+      gen = 0
+      while gen != gens:
+          yield {'gen':gen, 'state':self.tick()[0]}
+          gen += 1
+
     def random_entity(self):
         '''return entity ID so we know how pass actions back to the env'''
         entity = physics.Entity.random((0,self.width), (0,self.height), \
@@ -115,4 +136,3 @@ class Grid(Env):
 
     def clip(self, val, rng):
         return min(max(val, rng[0]), rng[1])
-
