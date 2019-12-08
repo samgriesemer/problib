@@ -15,7 +15,7 @@ class Candidate(Agent):
     expecting parameters for random generation; this would certainly
     be more sloppy than the current simple entry point constructor.
 
-    Want to separate candidate from agent. Candidates dont need to be 
+    Want to separate candidate from agent. Candidates dont need to be
     defined in the context of a gym evnironment. They just hold a genotype
     and inherit the basic functions seen in base
 

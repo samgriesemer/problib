@@ -19,7 +19,7 @@ class NeuralNetwork(model.Model):
 
         # convenient constants
         self.L = len(layers)
-        
+
         # hack for now (as opposed to std non-rand init)
         if weights is None:
             self.weights = []
@@ -57,7 +57,7 @@ class NeuralNetwork(model.Model):
         pass is returned by default.
 
         :data: input training data generator
-        """ 
+        """
         # reset layer activations
         self.A = []
 
@@ -71,7 +71,7 @@ class NeuralNetwork(model.Model):
             a = np.append(ones, a, 1)
             self.A.append(a)
 
-            # push prior activations through current 
+            # push prior activations through current
             # layer weights
             z = np.dot(a, w.T)
             a = act.sigmoid(z)
@@ -95,14 +95,14 @@ class NeuralNetwork(model.Model):
 
     def fit(self, data, batch_size=16):
             """
-            Main training loop, uses `forward()` and 
+            Main training loop, uses `forward()` and
             `backward()` methods to perform  iterative
             improvement of model weights via backprop.
             Performs each iteration using specified batch
             size on the given data generator.
 
-            :data: training data generator, DataLoader object 
-            :batch_size: size of batch to process 
+            :data: training data generator, DataLoader object
+            :batch_size: size of batch to process
             """
             return forward(data)
 
