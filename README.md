@@ -36,7 +36,6 @@ This library attempts to provide clean, modular implementations of many topics a
 * Probability (& Statistics)
   * Distributions (50%)
   * Sampling (0%)
-  * 
 
 * Simulation
   * Markov chain (0%)
