@@ -32,8 +32,11 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
             yield {'generation'    : gen,
                    'best_candidate': str(top_candidate.epigenesis()),
                    'best_fitness'  : self.fitness(top_candidate),
-                   'worst_fitness' : self.fitness(bot_candidate),
-                   'state'         : self.gym.state}
+                   'worst_fitness' : self.fitness(bot_candidate),}
+                   #'state'         : self.gym.state}
+
+            for cand in self.population:
+                print(str(cand.epigenesis()))
 
             # check termination condition
             if self.termination(self.population):

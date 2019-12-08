@@ -6,6 +6,12 @@ def mutation_decorator(mutate):
       mutate(candidate, **kwargs)
   return wrapper
 
+def class_mutation_decorator(mutate):
+  def wrapper(self, candidate, rate, **kwargs):
+    if random.random() < rate:
+      mutate(self, candidate, **kwargs)
+  return wrapper
+
 @mutation_decorator
 def bitflip(candidate):
   '''in-place flip bit in bit-array'''

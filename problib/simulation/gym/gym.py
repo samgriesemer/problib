@@ -136,6 +136,9 @@ class Gym():
     def agent_state(self, agent):
         return self.state[agent.id]
 
+    def refresh_state(self):
+        pass
+
 
 class PhysicsGym(Gym):
     '''
