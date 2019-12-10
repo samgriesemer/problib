@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>problib.simulation.gym package &#8212; problib  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="problib-simulation-gym-package">
+<h1>problib.simulation.gym package<a class="headerlink" href="#problib-simulation-gym-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.simulation.gym.agent">
+<span id="problib-simulation-gym-agent-module"></span><h2>problib.simulation.gym.agent module<a class="headerlink" href="#module-problib.simulation.gym.agent" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.simulation.gym.agent.Agent">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.agent.</code><code class="sig-name descname">Agent</code><span class="sig-paren">(</span><em class="sig-param">action_space=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base agent class for defining individuals that interact with
+and react to dynamic environments. Agent is responsible for
+maintaining an internal state that represents their interpretation
+of the world since their most recent observation, can store a history
+of such observations, defines an action mechanism (often based on the
+most recent state and reward), and a reward history.</p>
+<p>All functions are internally based. That is, except for the <cite>act()</cite> entry
+point, agent methods are expected to act on the internally managed variables
+like .state, .obs, .reward, etc. Anytime one of these functions is invoked,
+it can expect these internally kept values contain the most recent, relevant
+information. This is primarily due to the fact that all methods are invoked
+only by the <cite>act()</cite> method, which is responsible for accepting external
+information and updating internal values correctly before calling such methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">State_space</dt>
+<dd class="field-odd"><p>unaware of true state space</p>
+</dd>
+<dt class="field-even">Action_space</dt>
+<dd class="field-even"><p>is theoretically aware of available actions</p>
+</dd>
+<dt class="field-odd">Reward</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="method">
+<dt id="problib.simulation.gym.agent.Agent.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reward</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.agent.Agent.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main entry point for state/reward processing and internal model updates.
+This is where the agent is presented with new external information from the
+environment (state), along with any observed rewards from past actions. 
+This method is responsible for setting internal state and reward variables
+and maintaining historical storage. Once internal variables are updated,
+<cite>observe()</cite> is called to interpret the state and <cite>update()</cite> is invoked to
+update the agent’s internal model given the new information. A decision
+process is then invoked using avaiable information to return a selected
+action from the known action space.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.agent.Agent.action">
+<code class="sig-name descname">action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.agent.Agent.action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test addition to model. Goal is be separate from main act entry point and
+remain consistent with other methods acting on internal params. Also allows
+subclasses to override this method completely, without worrying about
+anything other than the internal state available.
+TODO: evaluate if this method should remain.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.agent.Agent.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.agent.Agent.observe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interal method to be called by <cite>act()</cite> for interpretting incoming state.
+Can be static and simple store the incoming state, or perform some sort
+of sensory analysis on the state as many agents must do in order to properly
+understand and parse the environmental state (i.e. apply any internal attention
+mechanisms). Sets the agent’s <cite>obs</cite> variable to this processed/interpretted state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.agent.Agent.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.agent.Agent.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform internal model updates based on current/historical states, rewards,
+and actions. Called by <cite>act()</cite> after receiving a new state, reward pair, and
+prior to the next generated action.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.simulation.gym.env">
+<span id="problib-simulation-gym-env-module"></span><h2>problib.simulation.gym.env module<a class="headerlink" href="#module-problib.simulation.gym.env" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.simulation.gym.env.Env">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.env.</code><code class="sig-name descname">Env</code><span class="sig-paren">(</span><em class="sig-param">state=None</em>, <em class="sig-param">engine=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base environment class outlining simple tick and draw methods. All
+environments to be used inside a Gym or interacting with Agent types
+should inherit this interface. Need to provide a state and action space
+for defining valid actions and return states.</p>
+<dl class="method">
+<dt id="problib.simulation.gym.env.Env.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Env.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return view of internal environment state. This method is currently
+undefined as there is no standard view protocol. This may ultimately
+be removed considering visualization is left to client side Javascript
+objects. Could be used to render pixels for purely vision-based envs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Env.tick">
+<code class="sig-name descname">tick</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Env.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute given agent action and perform single environment tick. Can be
+dynamic (e.g. call on physics engine) or static. Agent actions are subject
+to internally defined constraints (i.e. agent desires may not be executed
+exactly as intended due realistic limitations). Resulting environment state
+is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.gym.env.Grid">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.env.</code><code class="sig-name descname">Grid</code><span class="sig-paren">(</span><em class="sig-param">width, height, vxrng, vyrng, axrng=[0, 0], ayrng=[0, 0], entities=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.simulation.gym.env.Env" title="problib.simulation.gym.env.Env"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.env.Env</span></code></a></p>
+<p>Naive implementation, simple velocity and position
+updates on body of defined point objects. Action space
+includes all real number within velocity ranges, and the state
+is the current set of physics entities and their 2D positions.</p>
+<p>For now, the state (method) property is not resitricted and is
+encouraged to update state after entity creation/removal has occurred.
+No other entity state’s are affected, so no standard implementation
+should expect any side effects. Ultimately this may need reconsideration,
+but it has backing as explained in the docs.</p>
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.clip">
+<code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param">val</em>, <em class="sig-param">rng</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid.clip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.random">
+<em class="property">classmethod </em><code class="sig-name descname">random</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">width</em>, <em class="sig-param">height</em>, <em class="sig-param">vxrng</em>, <em class="sig-param">vyrng</em>, <em class="sig-param">axrng</em>, <em class="sig-param">ayrng</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alternate constructor for random creation of entities
+NOTE: entities currently removed from constructor and
+dependent on agent registry</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.random_entity">
+<code class="sig-name descname">random_entity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid.random_entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>return entity ID so we know how pass actions back to the env</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.remove_entity">
+<code class="sig-name descname">remove_entity</code><span class="sig-paren">(</span><em class="sig-param">eid</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid.remove_entity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">gens=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#problib.simulation.gym.env.Grid.state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.env.Grid.tick">
+<code class="sig-name descname">tick</code><span class="sig-paren">(</span><em class="sig-param">actions={}</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.Grid.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles action requests to engine entities, returns resulting
+state. Note for multi-agent systems, <cite>action</cite> is a list of actions
+to be performed by each agent at the current step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Actions</dt>
+<dd class="field-odd"><p>list of actions in form {‘action’:&lt;str&gt;, ‘aid’:&lt;int&gt;, value:{‘x’:&lt;int&gt;, ‘y’:&lt;int&gt;}}</p>
+</dd>
+<dt class="field-even">Actions</dt>
+<dd class="field-even"><p>numpy array of four needed values</p>
+</dd>
+</dl>
+<p>::known actions:: [‘setv’]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.gym.env.MultiAgentEnv">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.env.</code><code class="sig-name descname">MultiAgentEnv</code><span class="sig-paren">(</span><em class="sig-param">state=None</em>, <em class="sig-param">engine=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.MultiAgentEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.simulation.gym.env.Env" title="problib.simulation.gym.env.Env"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.env.Env</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.gym.env.SingleAgentEnv">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.env.</code><code class="sig-name descname">SingleAgentEnv</code><span class="sig-paren">(</span><em class="sig-param">state=None</em>, <em class="sig-param">engine=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.SingleAgentEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.simulation.gym.env.Env" title="problib.simulation.gym.env.Env"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.env.Env</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.gym.env.StaticContext">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.env.</code><code class="sig-name descname">StaticContext</code><span class="sig-paren">(</span><em class="sig-param">state=None</em>, <em class="sig-param">engine=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.env.StaticContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.simulation.gym.env.Env" title="problib.simulation.gym.env.Env"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.env.Env</span></code></a></p>
+<p>Official environment for defining a static state. To be used as a simple Env
+object inheriting necessary interface when only some context is needed. Does
+nothing to the base class.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.simulation.gym.gym">
+<span id="problib-simulation-gym-gym-module"></span><h2>problib.simulation.gym.gym module<a class="headerlink" href="#module-problib.simulation.gym.gym" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.simulation.gym.gym.Gym">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.gym.</code><code class="sig-name descname">Gym</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">agents=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements standard communication protocol between agents and environments,
+serving as a wrapper for agent-environment boilerplate and book-keeping (e.g.
+agent-entity registry and mapping, state/reward/action propogation, etc).
+Works with any environment and agent(s) inheriting the standard Env and Agent
+interfaces. Also an easy way to record the lifecycle of agents and ID them for
+analysis after simulation. Takes the more general assumption and operates with
+full multi-agent capability. Of course, single agent environments are a subset
+of mulit-agent ones and can be created under the same protocol (base does not
+implement any agent&lt;-&gt;env registry, just internal id assignment). However, the
+base will still record the single agent’s id, pass actions as a list, etc.</p>
+<p>NOTE: Environment is abstracted away from the client. For example, no params
+are taken for the tick method, meaning the client doesnt have to worry about
+passing in env states, actions, rewards, etc; this exchange occurs internally.</p>
+<p>Note also that local representation of env state is not automatically queried
+after agent modifications are made. This is to prevent unnecessary computation
+in the case the client expects to make a series of agent updates and needs access
+to new state immediately (otherwise the changes will be propogated through at the
+next tick). TODO: this functationality should be important and known, that newly
+created agents have the ability to act before the next state i.e. at the next tick,
+and will other be missing a round if not taken care of. This shouldn’t be a problem
+inside Gym, however, as the agent is immediately added to the internal registry
+and will be asked for an action at the next gym tick (although measures may be in
+place to filter out those agents not represented by the state, it’s simply a matter
+of choice for the implementing gym).</p>
+<p>TODO: address agent constancy, even for agents that have been removed from
+active storage but may exist in the history. Imagine a dormant agent in some
+external sim that is never deleted, but re-enters the spotlight after some time.
+Should the gym be responsible for tracking this type of long-term agent, or just
+those that remain across ticks (i.e. acting under the assumption that agents
+are removed after they leave the spotlight)? Could be easily solved by making the
+agent_history a dictionary, but there is more a semantic question than anything.</p>
+<p>Also consider using built-in id() function to prevent external interaction with
+the agent .id variable. Can simple store an internal mapping between id()s and
+internally generated ids. Considering the id() will remain unique for the object
+lifetime, it works well the desired system behavior BUT there remains the issue
+that another agent could pick up that id() when the old one is deleted. So this
+is fine dealing with dormant agents that were never deleted and still have the
+same id() (and would be recognized by the system), but introduces the problem
+of external clashes. However, since the gym maintains an agent history these
+id()s will likely be preserved correctly, and the mapping will hold both ways.
+This doesn’t necessarily make anything better for us now, but it could reduce
+the external modification required to set agent ids.</p>
+<p>Consider how agent actions sync up with environment ticks. Should the agent
+control the immediate next tick, or should it observe the state that will be
+used to update the next state before actions are applied (i.e. just difference
+in whether actions are applied before or after tick updates).</p>
+<p>Consider something like a <cite>agent_state(agent)</cite> method for grabbing state
+representation for given agent. Could reducde varying env/gym friction.</p>
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.agent_state">
+<code class="sig-name descname">agent_state</code><span class="sig-paren">(</span><em class="sig-param">agent</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.agent_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.refresh_state">
+<code class="sig-name descname">refresh_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.refresh_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.register_agent">
+<code class="sig-name descname">register_agent</code><span class="sig-paren">(</span><em class="sig-param">agent</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.register_agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.remove_agent">
+<code class="sig-name descname">remove_agent</code><span class="sig-paren">(</span><em class="sig-param">agent</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.remove_agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">gens=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.tick">
+<code class="sig-name descname">tick</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.tick" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.Gym.update_agents">
+<code class="sig-name descname">update_agents</code><span class="sig-paren">(</span><em class="sig-param">agents</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.Gym.update_agents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a list of agents to sets gym to have only those agents. This
+process is slightly more nuanced than setting the .agents variable;
+we need to track and maintain the same agent and internal id if an
+existing agent is passed as part of list to set. This is to ensure
+ID constancy and unique ID&lt;-&gt;agent mapping throughout the lifetime
+of the gym. Note that this identification is based on the signature
+of the agent instance itself; that is, the gym will treat a copy of
+an existing agent as something different than the original.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.gym.gym.PhysicsGym">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.gym.</code><code class="sig-name descname">PhysicsGym</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">agents=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.PhysicsGym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.simulation.gym.gym.Gym" title="problib.simulation.gym.gym.Gym"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.gym.Gym</span></code></a></p>
+<p>Extend standard Gym interface by adding physics entity-agent
+management. Overrides agent registry methods with additional
+entity updates propogated back to the env.</p>
+<dl class="method">
+<dt id="problib.simulation.gym.gym.PhysicsGym.agent_state">
+<code class="sig-name descname">agent_state</code><span class="sig-paren">(</span><em class="sig-param">agent</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.PhysicsGym.agent_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.PhysicsGym.refresh_state">
+<code class="sig-name descname">refresh_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.PhysicsGym.refresh_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.PhysicsGym.register_agent">
+<code class="sig-name descname">register_agent</code><span class="sig-paren">(</span><em class="sig-param">agent</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.PhysicsGym.register_agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.PhysicsGym.remove_agent">
+<code class="sig-name descname">remove_agent</code><span class="sig-paren">(</span><em class="sig-param">agent</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.PhysicsGym.remove_agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.PhysicsGym.tick">
+<code class="sig-name descname">tick</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.PhysicsGym.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Addressing problem of newly added agents not being represented
+in currently held state. For now iterate over eid’s directly
+as opposed to all gym agents, i.e. only agents recognized by
+environment</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.gym.gym.PhysicsGym.update_agents">
+<code class="sig-name descname">update_agents</code><span class="sig-paren">(</span><em class="sig-param">agents</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.gym.PhysicsGym.update_agents" title="Permalink to this definition">¶</a></dt>
+<dd><p>act explicitly for now, could implement “update” pattern
+through env and into engine
+UPDATE: turned into decent solution, no longer mega slow
+list lookup. Still consider above remark</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.simulation.gym.space">
+<span id="problib-simulation-gym-space-module"></span><h2>problib.simulation.gym.space module<a class="headerlink" href="#module-problib.simulation.gym.space" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.simulation.gym.space.ActionSpace">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.space.</code><code class="sig-name descname">ActionSpace</code><a class="headerlink" href="#problib.simulation.gym.space.ActionSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.simulation.gym.space.Space" title="problib.simulation.gym.space.Space"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.space.Space</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.gym.space.Space">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.space.</code><code class="sig-name descname">Space</code><span class="sig-paren">(</span><em class="sig-param">states=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.space.Space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Defines the notion of a gym space. Nothing more than a set
+with some additional structure. Used for outlining action
+spaces and state spaces.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.gym.space.StateSpace">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.gym.space.</code><code class="sig-name descname">StateSpace</code><span class="sig-paren">(</span><em class="sig-param">states=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.gym.space.StateSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.simulation.gym.space.Space" title="problib.simulation.gym.space.Space"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.space.Space</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.simulation.gym">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-problib.simulation.gym" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">problib</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Sam Griesemer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/problib.simulation.gym.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

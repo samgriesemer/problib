@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>problib.ml package &#8212; problib  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="problib-ml-package">
+<h1>problib.ml package<a class="headerlink" href="#problib-ml-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.ml.activation">
+<span id="problib-ml-activation-module"></span><h2>problib.ml.activation module<a class="headerlink" href="#module-problib.ml.activation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="problib.ml.activation.dsigmoid">
+<code class="sig-prename descclassname">problib.ml.activation.</code><code class="sig-name descname">dsigmoid</code><span class="sig-paren">(</span><em class="sig-param">z</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.activation.dsigmoid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.ml.activation.sigmoid">
+<code class="sig-prename descclassname">problib.ml.activation.</code><code class="sig-name descname">sigmoid</code><span class="sig-paren">(</span><em class="sig-param">z</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.activation.sigmoid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-problib.ml.gaussian_process">
+<span id="problib-ml-gaussian-process-module"></span><h2>problib.ml.gaussian_process module<a class="headerlink" href="#module-problib.ml.gaussian_process" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.ml.model">
+<span id="problib-ml-model-module"></span><h2>problib.ml.model module<a class="headerlink" href="#module-problib.ml.model" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.ml.model.Model">
+<em class="property">class </em><code class="sig-prename descclassname">problib.ml.model.</code><code class="sig-name descname">Model</code><a class="headerlink" href="#problib.ml.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base model class for machine learning algorithms. Outlines
+a <cite>fit()</cite> method for training on (internal?) data, and a 
+<cite>predict()</cite> method for inference on test data. This is a
+very light and incomplete blueprint, leaving all definitions
+to subclassing models.</p>
+<dl class="method">
+<dt id="problib.ml.model.Model.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.model.Model.fit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.ml.model.Model.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.model.Model.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="problib-ml-naivebayes-module">
+<h2>problib.ml.naivebayes module<a class="headerlink" href="#problib-ml-naivebayes-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="problib-ml-neuralnetwork-module">
+<h2>problib.ml.neuralnetwork module<a class="headerlink" href="#problib-ml-neuralnetwork-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.ml.nn">
+<span id="problib-ml-nn-module"></span><h2>problib.ml.nn module<a class="headerlink" href="#module-problib.ml.nn" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.ml.nn.NeuralNetwork">
+<em class="property">class </em><code class="sig-prename descclassname">problib.ml.nn.</code><code class="sig-name descname">NeuralNetwork</code><span class="sig-paren">(</span><em class="sig-param">layers</em>, <em class="sig-param">epsilon=1</em>, <em class="sig-param">lmda=1</em>, <em class="sig-param">weights=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.nn.NeuralNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.ml.model.Model" title="problib.ml.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.ml.model.Model</span></code></a></p>
+<p>Simple feedforward neural network base. Inherits
+from model base, uses sigmoid activations.
+Additional flexibility to be added soon.</p>
+<dl class="method">
+<dt id="problib.ml.nn.NeuralNetwork.backward">
+<code class="sig-name descname">backward</code><span class="sig-paren">(</span><em class="sig-param">out</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.nn.NeuralNetwork.backward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform single backward pass through the network.
+Uses backpropogation to update internal weights
+based on error gradients according to <cite>cost()</cite>
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.ml.nn.NeuralNetwork.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">batch_size=16</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.nn.NeuralNetwork.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main training loop, uses <cite>forward()</cite> and
+<cite>backward()</cite> methods to perform  iterative
+improvement of model weights via backprop.
+Performs each iteration using specified batch
+size on the given data generator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Data</dt>
+<dd class="field-odd"><p>training data generator, DataLoader object</p>
+</dd>
+<dt class="field-even">Batch_size</dt>
+<dd class="field-even"><p>size of batch to process</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.ml.nn.NeuralNetwork.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.nn.NeuralNetwork.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform single forward pass through the network.
+To be used in training loop and for inference
+after training has completed. The output of the
+pass is returned by default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Data</dt>
+<dd class="field-odd"><p>input training data generator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.ml.nn.NeuralNetwork.from_weights">
+<em class="property">classmethod </em><code class="sig-name descname">from_weights</code><span class="sig-paren">(</span><em class="sig-param">weights</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.nn.NeuralNetwork.from_weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.ml.nn.NeuralNetwork.init_weights">
+<code class="sig-name descname">init_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.nn.NeuralNetwork.init_weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.ml.nn.NeuralNetwork.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.ml.nn.NeuralNetwork.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="problib-ml-utils-module">
+<h2>problib.ml.utils module<a class="headerlink" href="#problib-ml-utils-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.ml">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-problib.ml" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">problib</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Sam Griesemer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/problib.ml.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

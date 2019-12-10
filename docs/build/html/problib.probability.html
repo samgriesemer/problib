@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>problib.probability package &#8212; problib  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="problib-probability-package">
+<h1>problib.probability package<a class="headerlink" href="#problib-probability-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.probability.distributions">
+<span id="problib-probability-distributions-module"></span><h2>problib.probability.distributions module<a class="headerlink" href="#module-problib.probability.distributions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.probability.distributions.Bernoulli">
+<em class="property">class </em><code class="sig-prename descclassname">problib.probability.distributions.</code><code class="sig-name descname">Bernoulli</code><span class="sig-paren">(</span><em class="sig-param">p</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Bernoulli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.probability.distributions.Distribution" title="problib.probability.distributions.Distribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.probability.distributions.Distribution</span></code></a></p>
+<dl class="method">
+<dt id="problib.probability.distributions.Bernoulli.cdf">
+<code class="sig-name descname">cdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Bernoulli.cdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>return cdf(x) = Pr(x &lt;= X)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Bernoulli.mean">
+<code class="sig-name descname">mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Bernoulli.mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>distribution mean</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Bernoulli.pdf">
+<code class="sig-name descname">pdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Bernoulli.pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>return pdf(x) = density(x)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Bernoulli.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">n=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Bernoulli.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>n: number of samples</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Bernoulli.variance">
+<code class="sig-name descname">variance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Bernoulli.variance" title="Permalink to this definition">¶</a></dt>
+<dd><p>distribution variance</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.probability.distributions.Binomial">
+<em class="property">class </em><code class="sig-prename descclassname">problib.probability.distributions.</code><code class="sig-name descname">Binomial</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">p</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Binomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.probability.distributions.Distribution" title="problib.probability.distributions.Distribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.probability.distributions.Distribution</span></code></a></p>
+<p>consider indexing probabilities at different
+values for later access. precompute could be cheap
+and save time later, or could expensive and never
+really used. have to compare the options</p>
+<dl class="method">
+<dt id="problib.probability.distributions.Binomial.cdf">
+<code class="sig-name descname">cdf</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">index=False</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Binomial.cdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>iteratively (naively) compute
+P(X &lt;= x)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Binomial.mean">
+<code class="sig-name descname">mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Binomial.mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>distribution mean</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Binomial.pdf">
+<code class="sig-name descname">pdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Binomial.pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>return pdf(x) = density(x)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Binomial.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">n=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Binomial.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>naive implementation (for now). meant to be used
+with relatively small n. consider poisson
+sampling for sufficiently large n</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Binomial.variance">
+<code class="sig-name descname">variance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Binomial.variance" title="Permalink to this definition">¶</a></dt>
+<dd><p>distribution variance</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.probability.distributions.Distribution">
+<em class="property">class </em><code class="sig-prename descclassname">problib.probability.distributions.</code><code class="sig-name descname">Distribution</code><span class="sig-paren">(</span><em class="sig-param">*params</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Consider extending base class to Continuous and Discrete subclasses.
+There are some slight differences that might matter to the API (e.g.
+“pdf” vs “pmf”)</p>
+<dl class="method">
+<dt id="problib.probability.distributions.Distribution.cdf">
+<code class="sig-name descname">cdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Distribution.cdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>return cdf(x) = Pr(x &lt;= X)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Distribution.mean">
+<code class="sig-name descname">mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Distribution.mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>distribution mean</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Distribution.pdf">
+<code class="sig-name descname">pdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Distribution.pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>return pdf(x) = density(x)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Distribution.quantile">
+<code class="sig-name descname">quantile</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Distribution.quantile" title="Permalink to this definition">¶</a></dt>
+<dd><p>return cdf^{-1}(p) = [Pr(x &lt;= X) == p]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Distribution.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Distribution.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>n: number of samples</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Distribution.variance">
+<code class="sig-name descname">variance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Distribution.variance" title="Permalink to this definition">¶</a></dt>
+<dd><p>distribution variance</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.probability.distributions.Exponential">
+<em class="property">class </em><code class="sig-prename descclassname">problib.probability.distributions.</code><code class="sig-name descname">Exponential</code><a class="headerlink" href="#problib.probability.distributions.Exponential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.probability.distributions.Normal">
+<em class="property">class </em><code class="sig-prename descclassname">problib.probability.distributions.</code><code class="sig-name descname">Normal</code><a class="headerlink" href="#problib.probability.distributions.Normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.probability.distributions.Poisson">
+<em class="property">class </em><code class="sig-prename descclassname">problib.probability.distributions.</code><code class="sig-name descname">Poisson</code><span class="sig-paren">(</span><em class="sig-param">lmda</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Poisson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="problib.probability.distributions.Poisson.cdf">
+<code class="sig-name descname">cdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Poisson.cdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Poisson.mean">
+<code class="sig-name descname">mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Poisson.mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Poisson.pdf">
+<code class="sig-name descname">pdf</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Poisson.pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Poisson.quantile">
+<code class="sig-name descname">quantile</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Poisson.quantile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Poisson.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Poisson.sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Poisson.variance">
+<code class="sig-name descname">variance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Poisson.variance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.probability.distributions.Uniform">
+<em class="property">class </em><code class="sig-prename descclassname">problib.probability.distributions.</code><code class="sig-name descname">Uniform</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="problib.probability.distributions.Uniform.cdf">
+<code class="sig-name descname">cdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Uniform.cdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Uniform.mean">
+<code class="sig-name descname">mean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Uniform.mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Uniform.pdf">
+<code class="sig-name descname">pdf</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Uniform.pdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Uniform.quantile">
+<code class="sig-name descname">quantile</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Uniform.quantile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Uniform.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Uniform.sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.probability.distributions.Uniform.variance">
+<code class="sig-name descname">variance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.distributions.Uniform.variance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.probability.sampling">
+<span id="problib-probability-sampling-module"></span><h2>problib.probability.sampling module<a class="headerlink" href="#module-problib.probability.sampling" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="problib.probability.sampling.importance_sampling">
+<code class="sig-prename descclassname">problib.probability.sampling.</code><code class="sig-name descname">importance_sampling</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.sampling.importance_sampling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.probability.sampling.inverse_transform">
+<code class="sig-prename descclassname">problib.probability.sampling.</code><code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">inv_cdf</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.sampling.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.probability.sampling.rejection_sampling">
+<code class="sig-prename descclassname">problib.probability.sampling.</code><code class="sig-name descname">rejection_sampling</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.sampling.rejection_sampling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.probability.sampling.sample">
+<code class="sig-prename descclassname">problib.probability.sampling.</code><code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">population</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.probability.sampling.sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-problib.probability">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-problib.probability" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">problib</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Sam Griesemer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/problib.probability.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

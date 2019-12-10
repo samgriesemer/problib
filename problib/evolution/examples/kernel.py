@@ -178,7 +178,7 @@ if __name__ == '__main__':
     sgym = gym.Gym(env.StaticContext(state))
 
     params = {
-        'population_size': 50,
+        'population_size': 30,
         'num_generations': 15000,
         'mutation_params': {
             'rate'       : 0.5,
@@ -190,8 +190,9 @@ if __name__ == '__main__':
         'cand_params'    : {
             'kernels'   : state['kernels'],
             'ops'       : state['ops'],
-            'kernel_num': 3
+            'kernel_num': 1
         },
+        'num_offspring'  : 3,
         'gym'            : sgym,
     }
 

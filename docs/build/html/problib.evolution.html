@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>problib.evolution package &#8212; problib  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="problib-evolution-package">
+<h1>problib.evolution package<a class="headerlink" href="#problib-evolution-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.evolution.candidate">
+<span id="problib-evolution-candidate-module"></span><h2>problib.evolution.candidate module<a class="headerlink" href="#module-problib.evolution.candidate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.evolution.candidate.AlphaString">
+<em class="property">class </em><code class="sig-prename descclassname">problib.evolution.candidate.</code><code class="sig-name descname">AlphaString</code><span class="sig-paren">(</span><em class="sig-param">genotype</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.AlphaString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.evolution.candidate.Candidate" title="problib.evolution.candidate.Candidate"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.evolution.candidate.Candidate</span></code></a></p>
+<p>Candidate child for genetic string</p>
+<dl class="method">
+<dt id="problib.evolution.candidate.AlphaString.epigenesis">
+<code class="sig-name descname">epigenesis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.AlphaString.epigenesis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process of turning genotype into phenotype</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.candidate.AlphaString.random">
+<em class="property">classmethod </em><code class="sig-name descname">random</code><span class="sig-paren">(</span><em class="sig-param">length</em>, <em class="sig-param">alphabet='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!&quot;#$%&amp;\'()*+</em>, <em class="sig-param">-./:;&lt;=&gt;?&#64;[\\]^_`{|}~ \t\n\r\x0b\x0c'</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.AlphaString.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create random AlphaString</p>
+<p>alphastr = AlphaString.random(length)
+alphastr = AlphaString.random(length, ‘abc’)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Genotype</dt>
+<dd class="field-odd"><p>list (mutable)</p>
+</dd>
+<dt class="field-even">Phenotype</dt>
+<dd class="field-even"><p>conversion to string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.evolution.candidate.BitString">
+<em class="property">class </em><code class="sig-prename descclassname">problib.evolution.candidate.</code><code class="sig-name descname">BitString</code><span class="sig-paren">(</span><em class="sig-param">genotype</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.BitString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.evolution.candidate.AlphaString" title="problib.evolution.candidate.AlphaString"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.evolution.candidate.AlphaString</span></code></a></p>
+<p>Candidate child for genetic string</p>
+<dl class="method">
+<dt id="problib.evolution.candidate.BitString.random">
+<em class="property">classmethod </em><code class="sig-name descname">random</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.BitString.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create random AlphaString</p>
+<p>alphastr = AlphaString.random(length)
+alphastr = AlphaString.random(length, ‘abc’)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Genotype</dt>
+<dd class="field-odd"><p>list (mutable)</p>
+</dd>
+<dt class="field-even">Phenotype</dt>
+<dd class="field-even"><p>conversion to string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.evolution.candidate.Candidate">
+<em class="property">class </em><code class="sig-prename descclassname">problib.evolution.candidate.</code><code class="sig-name descname">Candidate</code><span class="sig-paren">(</span><em class="sig-param">genotype</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.Candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="problib.simulation.gym.html#problib.simulation.gym.agent.Agent" title="problib.simulation.gym.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.simulation.gym.agent.Agent</span></code></a></p>
+<p>Base candidate class for evolutionary algorithms
+NOTE: can always consider switching the constructor to
+by default take random attributes and yield a stochastic
+candidate. This might make sense if we are to strictly
+follow what is most commonly used. However, it’s not
+obvious how to go from specified genotype into a constructor
+expecting parameters for random generation; this would certainly
+be more sloppy than the current simple entry point constructor.</p>
+<p>Want to separate candidate from agent. Candidates dont need to be
+defined in the context of a gym evnironment. They just hold a genotype
+and inherit the basic functions seen in base</p>
+<p>UPDATE: candidates ARE agents. They NEED to be defined in the context
+of a gym environment, as there must be a way of evaluating the candidates
+in an objective manner. This environment can be completely static, but
+the point is that it provides context for evaluating fitness. Candiates
+are to inherit the same methods as any agent, but have the additional
+<cite>genotype</cite> attribute which holds their internal representation in the
+context of a genetic algorithm process.</p>
+<dl class="method">
+<dt id="problib.evolution.candidate.Candidate.epigenesis">
+<code class="sig-name descname">epigenesis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.Candidate.epigenesis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process of turning genotype into phenotype</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.candidate.Candidate.random">
+<em class="property">classmethod </em><code class="sig-name descname">random</code><span class="sig-paren">(</span><em class="sig-param">genotype</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.Candidate.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alternate constructor for random candidate construction, to be
+implemented by subclassing type if stochastic construction.</p>
+<p>NOTE: This is currently the official way of creating random objects:
+define a standard constructor that sets internal variables based on
+given arguments. Then define class methods which take their own set
+of parameters and construct the main object by creating values and
+sending them to the constructor. This is, so far, the cleanest and
+most extendible approach to constructor overloading I’ve seen, and
+has since worked very well.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.evolution.candidate.NeuralNetwork">
+<em class="property">class </em><code class="sig-prename descclassname">problib.evolution.candidate.</code><code class="sig-name descname">NeuralNetwork</code><span class="sig-paren">(</span><em class="sig-param">genotype</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.NeuralNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.evolution.candidate.Candidate" title="problib.evolution.candidate.Candidate"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.evolution.candidate.Candidate</span></code></a></p>
+<p>NeuralNetwork candidate object for use in
+neuroevolution implementations. This candidate
+has a phenotype represented by its observable
+actions resulting from inference, and a genotype
+represented by its underlying internal network
+structure and weights. All evolution operations (as
+usual) are performed on the genotype level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Phenotype</dt>
+<dd class="field-odd"><p>output from inference and resulting behavior</p>
+</dd>
+<dt class="field-even">Genotype</dt>
+<dd class="field-even"><p>internal network structure and weight values</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="problib.evolution.candidate.NeuralNetwork.action">
+<code class="sig-name descname">action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.NeuralNetwork.action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test addition to model. Goal is be separate from main act entry point and
+remain consistent with other methods acting on internal params. Also allows
+subclasses to override this method completely, without worrying about
+anything other than the internal state available.
+TODO: evaluate if this method should remain.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.candidate.NeuralNetwork.epigenesis">
+<code class="sig-name descname">epigenesis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.NeuralNetwork.epigenesis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert from network structure to observable actions
+via inference on live neural network architecture using
+genotype weights. This process requires a data point on
+which to evaluate the network</p>
+<p>TODO: consider how this is being done; should a nn object
+be kept in memory at all times and modifications be made
+directly to its weights so come inference time everything is
+ready to go? This seems a little bulky but may end up being
+more efficient. Initializing a network each time from weights
+though has a tiny overhead; it just sets the nn object’s weights
+and no additional computation is needed.
+Also how are we going to pass the incoming data to the network
+for the actual inference procedure? Should the data be set to
+the network itself, passed to the function, or set under the
+candidate object?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.candidate.NeuralNetwork.random">
+<em class="property">classmethod </em><code class="sig-name descname">random</code><span class="sig-paren">(</span><em class="sig-param">layers</em>, <em class="sig-param">rng=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.NeuralNetwork.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take layers structure as input, instantiate neural
+network with given layers, set random weights according
+to [-rng, +rng]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Layers</dt>
+<dd class="field-odd"><p>list of network layer size</p>
+</dd>
+<dt class="field-even">Rng</dt>
+<dd class="field-even"><p>weights generated from [-rng, +rng]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.candidate.NeuralNetwork.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.candidate.NeuralNetwork.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform internal model updates based on current/historical states, rewards,
+and actions. Called by <cite>act()</cite> after receiving a new state, reward pair, and
+prior to the next generated action.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.evolution.crossover">
+<span id="problib-evolution-crossover-module"></span><h2>problib.evolution.crossover module<a class="headerlink" href="#module-problib.evolution.crossover" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="problib.evolution.crossover.multipoint">
+<code class="sig-prename descclassname">problib.evolution.crossover.</code><code class="sig-name descname">multipoint</code><span class="sig-paren">(</span><em class="sig-param">parent1</em>, <em class="sig-param">parent2</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.crossover.multipoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generalizes single point crossover, could make redundant</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="problib.evolution.crossover.single_point">
+<code class="sig-prename descclassname">problib.evolution.crossover.</code><code class="sig-name descname">single_point</code><span class="sig-paren">(</span><em class="sig-param">parent1</em>, <em class="sig-param">parent2</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.crossover.single_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>General single point crossover method for any two
+iterables of the same length</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="problib.evolution.crossover.weight_slice">
+<code class="sig-prename descclassname">problib.evolution.crossover.</code><code class="sig-name descname">weight_slice</code><span class="sig-paren">(</span><em class="sig-param">net1</em>, <em class="sig-param">net2</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.crossover.weight_slice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-problib.evolution.evolutionary">
+<span id="problib-evolution-evolutionary-module"></span><h2>problib.evolution.evolutionary module<a class="headerlink" href="#module-problib.evolution.evolutionary" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.evolution.evolutionary.Evolutionary">
+<em class="property">class </em><code class="sig-prename descclassname">problib.evolution.evolutionary.</code><code class="sig-name descname">Evolutionary</code><span class="sig-paren">(</span><em class="sig-param">population_size</em>, <em class="sig-param">num_generations</em>, <em class="sig-param">mutation_params</em>, <em class="sig-param">candidate</em>, <em class="sig-param">cand_params</em>, <em class="sig-param">num_offspring=1</em>, <em class="sig-param">gym=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base evolutionary algorithm class</p>
+<dl class="method">
+<dt id="problib.evolution.evolutionary.Evolutionary.create_population">
+<code class="sig-name descname">create_population</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary.create_population" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.evolutionary.Evolutionary.crossover">
+<code class="sig-name descname">crossover</code><span class="sig-paren">(</span><em class="sig-param">parent1</em>, <em class="sig-param">parent2</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary.crossover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method of reproduction between candidates</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.evolutionary.Evolutionary.fitness">
+<code class="sig-name descname">fitness</code><span class="sig-paren">(</span><em class="sig-param">candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary.fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fitness function for evaluating candidate quality</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.evolutionary.Evolutionary.mutation">
+<code class="sig-name descname">mutation</code><span class="sig-paren">(</span><em class="sig-param">candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary.mutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method of random mutation in candidate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.evolutionary.Evolutionary.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run evolutionary simulation, after class setup has been completed.
+Implementation will vary based on subclassing type. General approach
+will iterate until termination condition met, evaluating, selection,
+breeding, and mutating a population of candidates. Generator yielding
+generation specific details is encouraged functional form.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.evolutionary.Evolutionary.selection">
+<code class="sig-name descname">selection</code><span class="sig-paren">(</span><em class="sig-param">population</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary.selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method of parent selection for crossover</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.evolution.evolutionary.Evolutionary.termination">
+<code class="sig-name descname">termination</code><span class="sig-paren">(</span><em class="sig-param">population</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.evolutionary.Evolutionary.termination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Termination condition for simulation
+By default, return False so that simulation
+runs for all generations</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.evolution.genetic">
+<span id="problib-evolution-genetic-module"></span><h2>problib.evolution.genetic module<a class="headerlink" href="#module-problib.evolution.genetic" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.evolution.genetic.GeneticAlgorithm">
+<em class="property">class </em><code class="sig-prename descclassname">problib.evolution.genetic.</code><code class="sig-name descname">GeneticAlgorithm</code><span class="sig-paren">(</span><em class="sig-param">population_size</em>, <em class="sig-param">num_generations</em>, <em class="sig-param">mutation_params</em>, <em class="sig-param">candidate</em>, <em class="sig-param">cand_params</em>, <em class="sig-param">num_offspring=1</em>, <em class="sig-param">gym=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.genetic.GeneticAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#problib.evolution.evolutionary.Evolutionary" title="problib.evolution.evolutionary.Evolutionary"><code class="xref py py-class docutils literal notranslate"><span class="pre">problib.evolution.evolutionary.Evolutionary</span></code></a></p>
+<p>Standard genetic algorithm (in a way, the genetic algo is itself
+an agent, taking states, maintaining internal representation,
+reacting and responding to the environment</p>
+<dl class="method">
+<dt id="problib.evolution.genetic.GeneticAlgorithm.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.genetic.GeneticAlgorithm.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run evolutionary simulation, after class setup has been completed.
+Implementation will vary based on subclassing type. General approach
+will iterate until termination condition met, evaluating, selection,
+breeding, and mutating a population of candidates. Generator yielding
+generation specific details is encouraged functional form.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.evolution.mutation">
+<span id="problib-evolution-mutation-module"></span><h2>problib.evolution.mutation module<a class="headerlink" href="#module-problib.evolution.mutation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="problib.evolution.mutation.alter_weight">
+<code class="sig-prename descclassname">problib.evolution.mutation.</code><code class="sig-name descname">alter_weight</code><span class="sig-paren">(</span><em class="sig-param">candidate</em>, <em class="sig-param">rate</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.mutation.alter_weight" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.evolution.mutation.alterchar">
+<code class="sig-prename descclassname">problib.evolution.mutation.</code><code class="sig-name descname">alterchar</code><span class="sig-paren">(</span><em class="sig-param">candidate</em>, <em class="sig-param">rate</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.mutation.alterchar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.evolution.mutation.bitflip">
+<code class="sig-prename descclassname">problib.evolution.mutation.</code><code class="sig-name descname">bitflip</code><span class="sig-paren">(</span><em class="sig-param">candidate</em>, <em class="sig-param">rate</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.mutation.bitflip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.evolution.mutation.class_mutation_decorator">
+<code class="sig-prename descclassname">problib.evolution.mutation.</code><code class="sig-name descname">class_mutation_decorator</code><span class="sig-paren">(</span><em class="sig-param">mutate</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.mutation.class_mutation_decorator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="problib.evolution.mutation.mutation_decorator">
+<code class="sig-prename descclassname">problib.evolution.mutation.</code><code class="sig-name descname">mutation_decorator</code><span class="sig-paren">(</span><em class="sig-param">mutate</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.mutation.mutation_decorator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-problib.evolution.selection">
+<span id="problib-evolution-selection-module"></span><h2>problib.evolution.selection module<a class="headerlink" href="#module-problib.evolution.selection" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="problib.evolution.selection.roulette">
+<code class="sig-prename descclassname">problib.evolution.selection.</code><code class="sig-name descname">roulette</code><span class="sig-paren">(</span><em class="sig-param">population</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.evolution.selection.roulette" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="problib-evolution-test-module">
+<h2>problib.evolution.test module<a class="headerlink" href="#problib-evolution-test-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.evolution">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-problib.evolution" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">problib</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Sam Griesemer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/problib.evolution.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

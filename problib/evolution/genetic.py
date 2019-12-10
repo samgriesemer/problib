@@ -35,8 +35,8 @@ class GeneticAlgorithm(evolutionary.Evolutionary):
                    'worst_fitness' : self.fitness(bot_candidate),}
                    #'state'         : self.gym.state}
 
-            for cand in self.population:
-                print(str(cand.epigenesis()))
+            # for cand in self.population:
+            #     print(str(cand.epigenesis()))
 
             # check termination condition
             if self.termination(self.population):

@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>problib.simulation.engine package &#8212; problib  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="problib-simulation-engine-package">
+<h1>problib.simulation.engine package<a class="headerlink" href="#problib-simulation-engine-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.simulation.engine.physics">
+<span id="problib-simulation-engine-physics-module"></span><h2>problib.simulation.engine.physics module<a class="headerlink" href="#module-problib.simulation.engine.physics" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.simulation.engine.physics.Engine">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.engine.physics.</code><code class="sig-name descname">Engine</code><span class="sig-paren">(</span><em class="sig-param">entities=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base physics engine, outlines simple tick and entity management methods</p>
+<dl class="method">
+<dt id="problib.simulation.engine.physics.Engine.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">entity</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Engine.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an entity to for the engine to track</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.engine.physics.Engine.entity_arrays">
+<code class="sig-name descname">entity_arrays</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Engine.entity_arrays" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.engine.physics.Engine.remove">
+<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">eid</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Engine.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an entity from the engine</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.engine.physics.Engine.tick">
+<code class="sig-name descname">tick</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Engine.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute single gym tick</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.engine.physics.Entity">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.engine.physics.</code><code class="sig-name descname">Entity</code><span class="sig-paren">(</span><em class="sig-param">px=0</em>, <em class="sig-param">py=0</em>, <em class="sig-param">vx=0</em>, <em class="sig-param">vy=0</em>, <em class="sig-param">ax=0</em>, <em class="sig-param">ay=0</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>TODO: consider making this a numpy array based class for efficient updates</p>
+<dl class="method">
+<dt id="problib.simulation.engine.physics.Entity.random">
+<em class="property">classmethod </em><code class="sig-name descname">random</code><span class="sig-paren">(</span><em class="sig-param">pxrng</em>, <em class="sig-param">pyrng</em>, <em class="sig-param">vxrng</em>, <em class="sig-param">vyrng</em>, <em class="sig-param">axrng=None</em>, <em class="sig-param">ayrng=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Entity.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor overload, return randomly initialized
+point object within the specified position, velocty,
+and acceleration bounds</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.engine.physics.Entity.to_array">
+<code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Entity.to_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.simulation.engine.physics.Entity.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Entity.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update point physics</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.simulation.engine.physics.Vector">
+<em class="property">class </em><code class="sig-prename descclassname">problib.simulation.engine.physics.</code><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">z=0</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.simulation.engine.physics.Vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.simulation.engine">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-problib.simulation.engine" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">problib</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Sam Griesemer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/problib.simulation.engine.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

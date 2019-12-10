@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>problib.combinatorics package &#8212; problib  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="problib-combinatorics-package">
+<h1>problib.combinatorics package<a class="headerlink" href="#problib-combinatorics-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-problib.combinatorics.counting">
+<span id="problib-combinatorics-counting-module"></span><h2>problib.combinatorics.counting module<a class="headerlink" href="#module-problib.combinatorics.counting" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="problib.combinatorics.counting.Combination">
+<em class="property">class </em><code class="sig-prename descclassname">problib.combinatorics.counting.</code><code class="sig-name descname">Combination</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Combinations of iterables</p>
+<dl class="method">
+<dt id="problib.combinatorics.counting.Combination.count">
+<code class="sig-name descname">count</code><span class="sig-paren">(</span><em class="sig-param">k=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute nCk implicitly on object data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Combination.duplicates">
+<code class="sig-name descname">duplicates</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination.duplicates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Combination.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">k=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return generator over all combinations of object data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Combination.generate_with_repetition">
+<code class="sig-name descname">generate_with_repetition</code><span class="sig-paren">(</span><em class="sig-param">k=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination.generate_with_repetition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Combination.nCk">
+<em class="property">static </em><code class="sig-name descname">nCk</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination.nCk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute nCk</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Combination.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">k=None</em>, <em class="sig-param">m=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return generator over m random samples from k-combinations of object data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Combination.sample_without_replacement">
+<code class="sig-name descname">sample_without_replacement</code><span class="sig-paren">(</span><em class="sig-param">m=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Combination.sample_without_replacement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly generate m unique permutations of object data</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.combinatorics.counting.Permutation">
+<em class="property">class </em><code class="sig-prename descclassname">problib.combinatorics.counting.</code><code class="sig-name descname">Permutation</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Permutations of iterables</p>
+<dl class="method">
+<dt id="problib.combinatorics.counting.Permutation.count">
+<code class="sig-name descname">count</code><span class="sig-paren">(</span><em class="sig-param">k=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute nPk expxlicitly on object data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Permutation.duplicates">
+<code class="sig-name descname">duplicates</code><span class="sig-paren">(</span><em class="sig-param">k=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation.duplicates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Permutation.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">k=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return generator over all permutations of object data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Permutation.generate_with_repetition">
+<code class="sig-name descname">generate_with_repetition</code><span class="sig-paren">(</span><em class="sig-param">k=None</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation.generate_with_repetition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Permutation.nPk">
+<em class="property">static </em><code class="sig-name descname">nPk</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation.nPk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute nPk</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Permutation.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">k=None</em>, <em class="sig-param">m=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return generator over m random samples from k-permutations of object data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Permutation.sample_without_replacement">
+<code class="sig-name descname">sample_without_replacement</code><span class="sig-paren">(</span><em class="sig-param">m=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Permutation.sample_without_replacement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly generate m unique permutations of object data</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="problib.combinatorics.counting.Product">
+<em class="property">class </em><code class="sig-prename descclassname">problib.combinatorics.counting.</code><code class="sig-name descname">Product</code><span class="sig-paren">(</span><em class="sig-param">*data</em>, <em class="sig-param">repeat=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Cartesian product of iterables</p>
+<dl class="method">
+<dt id="problib.combinatorics.counting.Product.count">
+<code class="sig-name descname">count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Product.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute number of elements in product</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Product.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Product.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate all Cartesian product set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Product.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">m=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Product.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly generate m samples from the product</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="problib.combinatorics.counting.Product.sample_without_replacement">
+<code class="sig-name descname">sample_without_replacement</code><span class="sig-paren">(</span><em class="sig-param">m=1</em><span class="sig-paren">)</span><a class="headerlink" href="#problib.combinatorics.counting.Product.sample_without_replacement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly generate m unique samples from the product. If m
+greater than the number of possibles samples, return as
+many as possible.
+TODO: can implement approaches described in blog analysis.
+Iterative resampling is cheap early, but expensive later.
+Can attempt to dynamically implement both strategies for
+optimal performance.
+Decide on usage for never ending generator; for now loop
+change allows negative values to work.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-problib.combinatorics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-problib.combinatorics" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">problib</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Sam Griesemer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/problib.combinatorics.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
