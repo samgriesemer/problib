@@ -1,4 +1,5 @@
 import string
+import copy
 
 from ...combinatorics.counting import Product
 
@@ -86,7 +87,7 @@ class Gym():
         self.gen += 1
         
         # hot fix for adaptive agent registry, remove in future
-        self.state = self.env.state
+        self.state = copy.deepcopy(self.env.state)
 
         for aid, agent in self.agents.items():
             action[aid] = agent.act(self.state, self.reward)

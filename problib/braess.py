@@ -10,6 +10,10 @@ class Car():
         self.state.append(road)
 
 class TrafficAgent(agent.Agent):
+    def observe(self):
+        # restrict agents knowledge to only their own state
+        self.obs = self.state[self.id]
+
     def action(self):
         '''Decide on road to take'''
         #action = policy.ei(self.state_history)
@@ -69,7 +73,7 @@ class TrafficGym(gym.Gym):
         self.gen += 1
     
         for aid, agent in self.agents.items():
-            action[aid] = agent.act(self.state[aid], self.reward)
+            action[aid] = agent.act(self.state, self.reward)
         self.state, self.reward = self.env.tick(action)
 
     def start(self):
