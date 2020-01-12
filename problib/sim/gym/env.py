@@ -47,7 +47,7 @@ class StaticContext(Env):
     object inheriting necessary interface when only some context is needed. Does
     nothing to the base class.
     '''
-
+    pass
 
 class Grid(Env):
     '''

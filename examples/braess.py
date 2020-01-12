@@ -1,11 +1,11 @@
-from .simulation.gym import gym, env, agent, policy
+from problib.sim.gym import gym, env, agent, policy
 import random
 import copy
 
 class Car():
     def __init__(self):
         self.state = [0]
-    
+
     def drive(self, road):
         self.state.append(road)
 
@@ -17,7 +17,7 @@ class TrafficAgent(agent.Agent):
     def action(self):
         '''Decide on road to take'''
         #action = policy.ei(self.state_history)
-        return random.choice(self.state) 
+        return random.choice(self.state)
 
 class TrafficEnv(env.Env):
     def __init__(self, superhighway=None, f=25, d=100):
@@ -28,8 +28,7 @@ class TrafficEnv(env.Env):
             0: [1,2],
             1: [3],
             2: [3],
-            3: []
-        }
+            3: [] }
         self.costs = {
             0: [0, f],
             1: [f],
@@ -71,7 +70,7 @@ class TrafficGym(gym.Gym):
     def tick(self):
         action = {}
         self.gen += 1
-    
+
         for aid, agent in self.agents.items():
             action[aid] = agent.act(self.state, self.reward)
         self.state, self.reward = self.env.tick(action)
