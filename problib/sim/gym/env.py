@@ -1,4 +1,5 @@
 from ..engine import physics
+from ...algo import graph
 
 class Env():
     '''
@@ -117,11 +118,11 @@ class Grid(Env):
         return self.state, self.state
 
     def run(self, gens=-1):
-      yield {'state':self.start()[0]}
-      gen = 0
-      while gen != gens:
-          yield {'gen':gen, 'state':self.tick()[0]}
-          gen += 1
+        yield {'state':self.start()[0]}
+        gen = 0
+        while gen != gens:
+            yield {'gen':gen, 'state':self.tick()[0]}
+            gen += 1
 
     def random_entity(self):
         '''return entity ID so we know how pass actions back to the env'''
@@ -136,3 +137,16 @@ class Grid(Env):
 
     def clip(self, val, rng):
         return min(max(val, rng[0]), rng[1])
+
+class TrafficEnv(Env):
+    '''
+    Traffic environment for traffic simulations. Takes a (directed) Graph object representing
+    road structure, moves agents along roads with each tick. That is, agents are "at"
+    intersections between ticks, and during the tick the agent is moved along the direction to
+    the next intersection.
+    '''
+    def __init__(self, roads: graph.Graph):
+        self.roads = roads
+
+    def tick(self, action):
+        return self.state, None
