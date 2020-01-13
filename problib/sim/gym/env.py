@@ -7,6 +7,11 @@ class Env():
     environments to be used inside a Gym or interacting with Agent types
     should inherit this interface. Need to provide a state and action space
     for defining valid actions and return states.
+
+    Environments encompass all of the components necessary for action execution.
+    Environments should be independent of the agents interacting with it; it is not
+    concerned with how the agents make decisions but only how to execute submitted
+    actions against ingrained constraints. 
     '''
     def __init__(self, state=None, engine=None):
         # define internal tracking variables
@@ -23,8 +28,8 @@ class Env():
         dynamic (e.g. call on physics engine) or static. Agent actions are subject
         to internally defined constraints (i.e. agent desires may not be executed
         exactly as intended due realistic limitations). Resulting environment state
-        is returned.
-        '''
+        is returned
+.        '''
         return self.state, None
 
     def draw(self):

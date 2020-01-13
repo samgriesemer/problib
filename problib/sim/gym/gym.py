@@ -12,7 +12,7 @@ class Gym():
     interfaces. Also an easy way to record the lifecycle of agents and ID them for
     analysis after simulation. Takes the more general assumption and operates with
     full multi-agent capability. Of course, single agent environments are a subset
-    of mulit-agent ones and can be created under the same protocol (base does not
+    of multi-agent ones and can be created under the same protocol (base does not
     implement any agent<->env registry, just internal id assignment). However, the
     base will still record the single agent's id, pass actions as a list, etc.
 
