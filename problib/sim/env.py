@@ -1,5 +1,6 @@
 from ..engine import physics
 from ...algo import graph
+from . import space
 
 class Env():
     '''
@@ -13,24 +14,26 @@ class Env():
     concerned with how the agents make decisions but only how to execute submitted
     actions against ingrained constraints. 
     '''
-    def __init__(self, state=None, engine=None):
-        # define internal tracking variables
-        self.state = state
+    def __init__(self, state_space=None, action_space=None, entity_space=None, engine=None):
+        # define spaces
+        self.state_space  = state_space
+        self.action_space = action_space
+        self.entity_space = entity_space
         self.engine = engine
 
-        # define spaces
-        #self.state_space  = space.State()
-        #self.action_space = space.Action()
+        # define basic management variables
+        self.state = {}
+        self.entities = {}
 
     def tick(self, action):
         '''
         Execute given agent action and perform single environment tick. Can be
         dynamic (e.g. call on physics engine) or static. Agent actions are subject
         to internally defined constraints (i.e. agent desires may not be executed
-        exactly as intended due realistic limitations). Resulting environment state
+        exactly as intended due to realistic limitations). Resulting environment state
         is returned
-.        '''
-        return self.state, None
+        '''
+        return self.state, 0, False
 
     def draw(self):
         '''
@@ -40,6 +43,21 @@ class Env():
         objects. Could be used to render pixels for purely vision-based envs.
         '''
         pass
+
+    def create(self, type):
+        '''
+        Create an entity of the specified. Used to populate the environment with
+        objects necessary to the simulation. This method is provided for working with
+        environments that need to be dynamic and update the entities within while the
+        simulation is running.
+
+        :type: An entity from the entity space
+        '''
+        pass
+
+class RandomEnv(Env):
+    def tick(self, action):
+        return self.state_space.sample(), 
 
 class SingleAgentEnv(Env):
     pass
@@ -150,8 +168,13 @@ class TrafficEnv(Env):
     intersections between ticks, and during the tick the agent is moved along the direction to
     the next intersection.
     '''
-    def __init__(self, roads: graph.Graph):
+    def __init__(self, roads: graph.Graph, cars: int, traffic_lights: int):
         self.roads = roads
+
+        # create initial entities
+        for _ in range(cars): self.create('car')
+        for _ in range(traffic_lights): self.create('traffic_light')
 
     def tick(self, action):
         return self.state, None
+        
