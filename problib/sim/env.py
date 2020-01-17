@@ -12,7 +12,7 @@ class Env():
     Environments encompass all of the components necessary for action execution.
     Environments should be independent of the agents interacting with it; it is not
     concerned with how the agents make decisions but only how to execute submitted
-    actions against ingrained constraints. 
+    actions against ingrained constraints.
     '''
     def __init__(self, state_space=None, action_space=None, entity_space=None, engine=None):
         # define spaces
@@ -56,6 +56,9 @@ class Env():
         pass
 
 class RandomEnv(Env):
+    def __init__(self):
+        state_space = space.Discrete()
+
     def tick(self, action):
         return self.state_space.sample(), 
 
