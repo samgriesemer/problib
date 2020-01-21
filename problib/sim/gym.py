@@ -1,7 +1,7 @@
 import string
 import copy
 
-from ...combinatorics.counting import Product
+from ..combinatorics.counting import Product
 
 class Gym():
     '''

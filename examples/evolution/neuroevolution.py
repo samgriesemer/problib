@@ -40,4 +40,3 @@ if __name__ == '__main__':
 
     # consider if this is the best approach
     exhaust(sim.run(), interval=200)
-

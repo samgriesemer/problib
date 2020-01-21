@@ -6,5 +6,5 @@ from . import cv
 from . import evolution
 from . import ml
 from . import probability
-from . import simulation
+from . import sim
 from . import utils

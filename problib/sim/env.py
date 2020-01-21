@@ -1,10 +1,10 @@
-from ..engine import physics
-from ...algo import graph
+from .engine import Engine
+# from ..algorithms import graph
 from . import space
 
 class Env():
     '''
-    Base environment class outlining simple tick and draw methods. All
+    Base environment class outlining simple tick, draw, and create methods. All
     environments to be used inside a Gym or interacting with Agent types
     should inherit this interface. Need to provide a state and action space
     for defining valid actions and return states.
@@ -13,6 +13,13 @@ class Env():
     Environments should be independent of the agents interacting with it; it is not
     concerned with how the agents make decisions but only how to execute submitted
     actions against ingrained constraints.
+
+    This environment module is designed with multi agent systems in mind. Environments
+    dont have to be crafted with specific elements and logic built-in. The implementation
+    intends to be general enough to allow for factory object registration; this is often
+    important when creating or changing an agents representation in the simulation at run time
+    or dynamically before hand. This is where the library differs from existing implementations
+    like OpenAI's gym library; it uses a more general and flexible approach.
     '''
     def __init__(self, state_space=None, action_space=None, entity_space=None, engine=None):
         # define spaces
@@ -21,17 +28,25 @@ class Env():
         self.entity_space = entity_space
         self.engine = engine
 
-        # define basic management variables
+        # full environment state, describes every piece of information that would be needed to
+        # recreate the same state in a different instance
         self.state = {}
+
+        # entity dict mapping from entity name (string) to list of those object types currently
+        # registered by the environment
         self.entities = {}
 
     def tick(self, action):
         '''
-        Execute given agent action and perform single environment tick. Can be
+        Execute given agent(s) action(s) and perform single environment tick. Can be
         dynamic (e.g. call on physics engine) or static. Agent actions are subject
         to internally defined constraints (i.e. agent desires may not be executed
-        exactly as intended due to realistic limitations). Resulting environment state
-        is returned
+        exactly as intended due to realistic limitations). Returns a tuple containing the
+        new environment state, the reward, and whether or not the env has reached termination.
+
+        This method implements what is commonly referred to as the "successor/transition function".
+        It is a function that maps input from the state space (current state), action space X entity space
+        (submitted agent actions) to the state space (next state)
         '''
         return self.state, 0, False
 
@@ -44,29 +59,25 @@ class Env():
         '''
         pass
 
-    def create(self, type):
+    def create(self, type, params):
         '''
-        Create an entity of the specified. Used to populate the environment with
-        objects necessary to the simulation. This method is provided for working with
-        environments that need to be dynamic and update the entities within while the
-        simulation is running.
+        Create an entity of the specified type, use the given params. Used to populate
+        the environment with objects necessary to the simulation. This method is provided
+        for working with environments that need to be dynamic and update the entities within
+        while the simulation is running.
 
         :type: An entity from the entity space
         '''
         pass
 
 class RandomEnv(Env):
-    def __init__(self):
-        state_space = space.Discrete()
-
+    '''
+    Simple example environment inheriting from base env. Takes given state, action, and entity
+    spaces and executes random actions at each tick. This example serves as an env independent of
+    any agents.
+    '''
     def tick(self, action):
-        return self.state_space.sample(), 
-
-class SingleAgentEnv(Env):
-    pass
-
-class MultiAgentEnv(Env):
-    pass
+        return self.state_space.sample(), 0, False
 
 class StaticContext(Env):
     '''
@@ -99,7 +110,7 @@ class Grid(Env):
         self.ayrng = ayrng
 
         # create underlying physics engine
-        self.engine = physics.Engine(entities)
+        self.engine = Engine(entities)
 
     @classmethod
     def random(cls, n, width, height, vxrng, vyrng, axrng, ayrng):
@@ -110,7 +121,7 @@ class Grid(Env):
         '''
         entities = []
         for _ in range(n):
-            e = physics.Entity.random((0, width), (0, height), vxrng, vyrng)
+            e = Entity.random((0, width), (0, height), vxrng, vyrng)
             entities.append(e)
         return cls(entities, width, height, vxrng, vyrng)
 
@@ -152,7 +163,7 @@ class Grid(Env):
 
     def random_entity(self):
         '''return entity ID so we know how pass actions back to the env'''
-        entity = physics.Entity.random((0,self.width), (0,self.height), \
+        entity = Entity.random((0,self.width), (0,self.height), \
                                        self.vxrng, self.vyrng, self.axrng, self.ayrng)
         self.engine.add(entity)
         # return entity.id
@@ -164,20 +175,20 @@ class Grid(Env):
     def clip(self, val, rng):
         return min(max(val, rng[0]), rng[1])
 
-class TrafficEnv(Env):
-    '''
-    Traffic environment for traffic simulations. Takes a (directed) Graph object representing
-    road structure, moves agents along roads with each tick. That is, agents are "at"
-    intersections between ticks, and during the tick the agent is moved along the direction to
-    the next intersection.
-    '''
-    def __init__(self, roads: graph.Graph, cars: int, traffic_lights: int):
-        self.roads = roads
+# class TrafficEnv(Env):
+#     '''
+#     Traffic environment for traffic simulations. Takes a (directed) Graph object representing
+#     road structure, moves agents along roads with each tick. That is, agents are "at"
+#     intersections between ticks, and during the tick the agent is moved along the direction to
+#     the next intersection.
+#     '''
+#     def __init__(self, roads: graph.Graph, cars: int, traffic_lights: int):
+#         self.roads = roads
 
-        # create initial entities
-        for _ in range(cars): self.create('car')
-        for _ in range(traffic_lights): self.create('traffic_light')
+#         # create initial entities
+#         for _ in range(cars): self.create('car')
+#         for _ in range(traffic_lights): self.create('traffic_light')
 
-    def tick(self, action):
-        return self.state, None
-        
+#     def tick(self, action):
+#         return self.state, None
+#         

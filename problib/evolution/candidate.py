@@ -1,6 +1,6 @@
 import string
 
-from ..simulation.gym.agent import Agent
+from ..sim.agent import Agent
 from ..combinatorics import counting
 from ..ml import nn
 

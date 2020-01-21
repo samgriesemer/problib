@@ -1,13 +1,11 @@
 import math
 import random
 
-def sample(population, k):
-    results = []
+def sample(population, k=1):
     for i in range(k):
         r = math.floor(random.random()*len(population))
-        results.append(population[r])
+        yield population[r]
         population.pop(r)
-    return results
 
 def inverse_transform(inv_cdf):
     r = random.random()

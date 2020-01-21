@@ -161,7 +161,7 @@ class Uniform(ContinuousDistribution):
     def quantile(self, x):
         pass
 
-    def sample(self, n):
+    def sample(self, n=1):
         for _ in range(n):
             yield random.random()*self.width+self.lower
 
