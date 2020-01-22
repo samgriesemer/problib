@@ -15,11 +15,10 @@ class Agent():
     only by the `act()` method, which is responsible for accepting external
     information and updating internal values correctly before calling such methods.
 
-    :state_space: unaware of true state space
     :action_space: is theoretically aware of available actions
     :reward:
     '''
-    def __init__(self, action_space=[]):
+    def __init__(self, action_space=None):
         '''NOTE: determine how much agent should be dealing with this vs letting the gym handle it'''
         # make agent aware of action space
         self.action_space = action_space
@@ -30,35 +29,29 @@ class Agent():
         # current raw state from env (reconsider use of state for env and more internal agent vars)
         self.state = {}
 
-        # internal interpretation of current env state
-        self.obs = {}
-
         # current received reward from env
-        self.reward = {}
-
-        # historical storage
-        self.state_history = []
-        self.reward_history = []
+        self.reward = None
 
         # agent identifier
-        self.id = 0
+        self.id = None
 
-    def observe(self):
+    def observe(self, state):
         '''
-        Interal method to be called by `act()` for interpretting incoming state.
-        Can be static and simple store the incoming state, or perform some sort
-        of sensory analysis on the state as many agents must do in order to properly
-        understand and parse the environmental state (i.e. apply any internal attention
-        mechanisms). Sets the agent's `obs` variable to this processed/interpretted state.
+        Interpret incoming global environment state. Serves as sensory input processing stage,
+        which can be necessary in order for agents to properly understand and parse the exteneral
+        environment signal.
+        
+        This method is by default called by the `act()` method before executing the policy action
+        on the current agent state. This method is left to agents so that the logic behind individual
+        agents' interpretations is abstracted away from the environment.
         '''
-        # by default, observe the entire raw state
-        self.obs = self.state 
+        return state
 
     def update(self):
         '''
-        Perform internal model updates based on current/historical states, rewards,
-        and actions. Called by `act()` after receiving a new state, reward pair, and
-        prior to the next generated action.
+        Perform internal model updates based on new states, rewards, and any other information used by
+        the agent's internal model. This method is called by `act()` after receiving a new (state, reward) pair
+        to allow the model to incorporate newly available information before its policy is queried.
         '''
         pass
 
@@ -69,6 +62,8 @@ class Agent():
         subclasses to override this method completely, without worrying about
         anything other than the internal state available.
         TODO: evaluate if this method should remain.
+
+        A policy maps from the 
         '''
         return self.obs
 
@@ -84,14 +79,16 @@ class Agent():
         process is then invoked using avaiable information to return a selected
         action from the known action space.
         '''
-        # update internal representation
-        self.state = state
+
+        # interpret the environment signal according to internal sensory processing
+        self.state = self.observe(state)
+
+        # 
         self.reward = reward
+
+        # populate history tracking variables
         self.state_history.append(state)
         self.reward_history.append(reward)
-
-        # interpret env state
-        self.observe()
 
         # update internal model
         self.update()

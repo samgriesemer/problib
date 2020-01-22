@@ -1,5 +1,4 @@
 from .engine import Engine
-# from ..algorithms import graph
 from . import space
 
 class Env():
@@ -70,22 +69,21 @@ class Env():
         '''
         pass
 
-class RandomEnv(Env):
+class Static(Env):
     '''
-    Simple example environment inheriting from base env. Takes given state, action, and entity
-    spaces and executes random actions at each tick. This example serves as an env independent of
-    any agents.
-    '''
-    def tick(self, action):
-        return self.state_space.sample(), 0, False
-
-class StaticContext(Env):
-    '''
-    Official environment for defining a static state. To be used as a simple Env
-    object inheriting necessary interface when only some context is needed. Does
-    nothing to the base class.
+    Environment for defining a static state. To be used as a simple environment object
+    inheriting necessary interface when some static context is needed for agent reference.
+    Adds nothing to the base class.
     '''
     pass
+
+class RandomState(Env):
+    '''
+    Simple random state environment. Takes given state, action, and entity spaces and simply samples
+    random states at each tick. This env independent of any assigned agents.
+    '''
+    def tick(self, action=None):
+        return self.state_space.sample(), 0, False
 
 class Grid(Env):
     '''
