@@ -16,72 +16,106 @@ class Agent():
     information and updating internal values correctly before calling such methods.
 
     :action_space: is theoretically aware of available actions
-    :reward:
     '''
-    def __init__(self, action_space=None):
-        '''NOTE: determine how much agent should be dealing with this vs letting the gym handle it'''
-        # make agent aware of action space
+    def __init__(self, state_space=None, action_space=None):
+        # define relevant spaces, note state space is the 
+        self.state_space  = state_space  
         self.action_space = action_space
 
-        # internal model, stores "internal agent state" 
+        # internal model, stores internal agent state 
         self.model = {}
 
-        # current raw state from env (reconsider use of state for env and more internal agent vars)
+        # current raw state from env (reconsider use of state for env and more
+        # internal agent vars)
         self.state = {}
 
-        # current received reward from env
-        self.reward = None
+        # internal history tracking variables
+        self.state_history = []
+        self.reward_history = []
+        self.action_history = []
 
         # agent identifier
         self.id = None
 
-    def observe(self, state):
+    def observe(self, state, reward):
         '''
-        Interpret incoming global environment state. Serves as sensory input processing stage,
-        which can be necessary in order for agents to properly understand and parse the exteneral
-        environment signal.
-        
-        This method is by default called by the `act()` method before executing the policy action
-        on the current agent state. This method is left to agents so that the logic behind individual
-        agents' interpretations is abstracted away from the environment.
+        Interpret incoming environment state. The structure of this state should
+        either be coordinated with the environment or known by the agent. This
+        method is left to agents so that the possibly varying individual agents'
+        interpretations are abstracted away from the environment.
+
+        Semantically this method serves as a sensory input processing stage,
+        whereby the agent filters out information it's incapable of perceiving
+        (or rather focuses only that information it knows how to process) due to
+        imposed sensory restraints. For example, as a human the external environment
+        produces a spectrum of light, from which we are only able to perceive certain
+        frequencies.
+
+        This method is by default called by the `auto()` method before any other
+        agent updates are made (i.e. before `update()` and `act()` are called).
+
+        Note that the agent is left to process the reward in this method as well. 
+        This can be done however the inheriting class needs: it can be set as its
+        own instance variable, stored as an attribute of the state, or disregarded
+        entirely. We decided against explicitly setting a reward instance variable
+        in the interest of modularity. Besides, the reward is not inherent to the
+        agent itself; rather, it's a piece of information like the state that is
+        communicated by the environment.
         '''
         pass
 
     def update(self):
         '''
-        Perform internal model updates based on new states, rewards, and any other information used by
-        the agent's internal model. This method is used primarily by model-based RL agents, explicitly
-        defining the process by which the internal world model should be updated according to the new
-        information. 
+        Perform internal model updates based on new state, reward, and any other
+        information used by the agent's internal model (e.g. state/reward histories).
+        This method is used primarily by model-based RL agents, explicitly defining
+        the process by which the internal world model should be updated according
+        to the newly available information.
 
-        This method is called by `act()` after receiving a new (state, reward) pair
-        to allow the model to incorporate newly available information before its policy is queried.
+        This method is called by the `auto()` method following the observation phase,
+        at which point the agent has interpreted the new environment state and made it
+        available for further processing. This method also precedes the action mechanism,
+        allowing the agent to make necessary model changes before deciding how to act.
         '''
         pass
 
     def act(self):
         '''
-        Main entry point for state/reward processing and internal model updates.
-        This is where the agent is presented with new external information from the
-        environment (state), along with any observed rewards from past actions. 
-        This method is responsible for setting internal state and reward variables
-        and maintaining historical storage. Once internal variables are updated,
-        `observe()` is called to interpret the state and `update()` is invoked to
-        update the agent's internal model given the new information. A decision
-        process is then invoked using avaiable information to return a selected
-        action from the known action space.
+        Generate action according to currently available internal information.
+        This primarily includes the `state` and `model` variables, but can include
+        any other explicitly defined instance variables. Unlike the other internal
+        agent methods, this method is not static and returns the decided upon action.
+        Note this action should created from or verified by the action space before
+        being returned.
+
+        This method is called by the `auto()` method following the observation and
+        model update phases during the response to external stimulus. All available
+        information has been processed and necessary model changes have been made,
+        implying the agent should have everything it needs to make a final decision.
         '''
         pass
 
     def auto(self, state, reward):
+        '''
+        Define basic boilerplate for processing external stimulus and generating
+        a following action. This is the primary endpoint for interacting with the
+        agent, and should be used by external APIs such as the gym.
+        '''
+        # pass new information to observation process
+        self.observe(state, reward)
+
+        # update internal model (if defined)
+        self.update()
+
+        # generate action from available state/model
+        action = self.act()
+
         # populate history tracking variables
         self.state_history.append(state)
         self.reward_history.append(reward)
+        self.action_history.append(action)
 
-        self.reward = reward
-        self.state = self.observe(state)
-        self.model = self.update()
-        return self.act()
+        return action
 
 
 class Example(Agent):
