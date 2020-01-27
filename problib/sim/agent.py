@@ -45,29 +45,21 @@ class Agent():
         on the current agent state. This method is left to agents so that the logic behind individual
         agents' interpretations is abstracted away from the environment.
         '''
-        return state
+        pass
 
     def update(self):
         '''
         Perform internal model updates based on new states, rewards, and any other information used by
-        the agent's internal model. This method is called by `act()` after receiving a new (state, reward) pair
+        the agent's internal model. This method is used primarily by model-based RL agents, explicitly
+        defining the process by which the internal world model should be updated according to the new
+        information. 
+
+        This method is called by `act()` after receiving a new (state, reward) pair
         to allow the model to incorporate newly available information before its policy is queried.
         '''
         pass
 
-    def action(self):
-        '''
-        Test addition to model. Goal is be separate from main act entry point and
-        remain consistent with other methods acting on internal params. Also allows
-        subclasses to override this method completely, without worrying about
-        anything other than the internal state available.
-        TODO: evaluate if this method should remain.
-
-        A policy maps from the 
-        '''
-        return self.obs
-
-    def act(self, state, reward):
+    def act(self):
         '''
         Main entry point for state/reward processing and internal model updates.
         This is where the agent is presented with new external information from the
@@ -79,24 +71,25 @@ class Agent():
         process is then invoked using avaiable information to return a selected
         action from the known action space.
         '''
+        pass
 
-        # interpret the environment signal according to internal sensory processing
-        self.state = self.observe(state)
-
-        # 
-        self.reward = reward
-
+    def auto(self, state, reward):
         # populate history tracking variables
         self.state_history.append(state)
         self.reward_history.append(reward)
 
-        # update internal model
-        self.update()
+        self.reward = reward
+        self.state = self.observe(state)
+        self.model = self.update()
+        return self.act()
 
-        # generate and return action
-        return self.action()
 
-        '''
-        implement some decision process and return an action
-        '''
-        #return self.action_space.sample() 
+class Example(Agent):
+    def observe(self, state):
+        self.state = state
+
+    def update(self):
+        self.model = self.state
+
+    def act(self);
+        return self.action_space.sample()
