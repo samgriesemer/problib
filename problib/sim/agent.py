@@ -127,3 +127,4 @@ class Example(Agent):
 
     def act(self);
         return self.action_space.sample()
+

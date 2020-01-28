@@ -1,5 +1,4 @@
-from .engine import Engine
-from . import space
+from . import space, engine
 
 class Env():
     '''
@@ -189,4 +188,3 @@ class Grid(Env):
 
 #     def tick(self, action):
 #         return self.state, None
-#         
