@@ -6,7 +6,6 @@ class TrafficEnv(env.Env):
 
 
 # usage
-
 entities = {
     'car': Car,
     'traffic_light': TrafficLight
@@ -21,4 +20,4 @@ roadnet = graph.UndirectedGraph({
 # initialize new traffic env
 traffic = TrafficEnv(roadnet)
 
-
+env.make('Traffic
