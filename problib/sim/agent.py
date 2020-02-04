@@ -125,6 +125,6 @@ class Example(Agent):
     def update(self):
         self.model = self.state
 
-    def act(self);
+    def act(self):
         return self.action_space.sample()
 
