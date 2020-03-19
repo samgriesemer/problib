@@ -34,7 +34,7 @@ class Env():
         # registered by the environment
         self.entities = {}
 
-    def tick(self, action):
+    def tick(self, action, sandbox=False):
         '''
         Execute given agent(s) action(s) and perform single environment tick. Can be
         dynamic (e.g. call on physics engine) or static. Agent actions are subject
@@ -45,6 +45,8 @@ class Env():
         This method implements what is commonly referred to as the "successor/transition function".
         It is a function that maps input from the state space (current state), action space X entity space
         (submitted agent actions) to the state space (next state)
+
+        NEW: sandbox execution mode, to accomodate rollouts and internal agent planning simulations
         '''
         return self.state, 0, False
 

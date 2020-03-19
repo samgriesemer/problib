@@ -2,10 +2,18 @@ from problib.sim import *
 
 class TrafficEnv(env.Env):
     def __init__(self, roads: graph.Graph):
-        self.roads = roadsA
+        self.roads = roads
 
+class Car(entity.Entity):
+    pass
+
+class TrafficLight(entity.Entity):
+    pass
 
 # usage
+states = space.Discrete()
+actions = space.Discrete([1,2,3,4])
+
 entities = {
     'car': Car,
     'traffic_light': TrafficLight
@@ -18,6 +26,10 @@ roadnet = graph.UndirectedGraph({
 })
 
 # initialize new traffic env
-traffic = TrafficEnv(roadnet)
+traffic = TrafficEnv({
+    'state_space': states
+    'action_space': actions
+    'entity_space': entities
+    'roads': roadnet
+})
 
-env.make('Traffic
