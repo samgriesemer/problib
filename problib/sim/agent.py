@@ -7,12 +7,12 @@ class Agent():
     of such observations, defines an action mechanism (often based on the
     most recent state and reward), and a reward history.
 
-    All functions are internally based. That is, except for the `act()` entry
+    All functions are internally based. That is, except for the `auto()` entry
     point, agent methods are expected to act on the internally managed variables
     like .state, .obs, .reward, etc. Anytime one of these functions is invoked,
     it can expect these internally kept values contain the most recent, relevant
     information. This is primarily due to the fact that all methods are invoked
-    only by the `act()` method, which is responsible for accepting external
+    only by the `auto()` method, which is responsible for accepting external
     information and updating internal values correctly before calling such methods.
 
     :action_space: is theoretically aware of available actions
@@ -85,7 +85,7 @@ class Agent():
         This primarily includes the `state` and `model` variables, but can include
         any other explicitly defined instance variables. Unlike the other internal
         agent methods, this method is not static and returns the decided upon action.
-        Note this action should created from or verified by the action space before
+        Note this action should be created from or verified by the action space before
         being returned.
 
         This method is called by the `auto()` method following the observation and

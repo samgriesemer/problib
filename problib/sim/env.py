@@ -46,7 +46,7 @@ class Env():
         It is a function that maps input from the state space (current state), action space X entity space
         (submitted agent actions) to the state space (next state)
 
-        NEW: sandbox execution mode, to accomodate rollouts and internal agent planning simulations
+        NEW: sandbox execution mode, to accommodate rollouts and internal agent planning simulations
         '''
         return self.state, 0, False
 
@@ -81,12 +81,30 @@ class Static(Env):
 class RandomState(Env):
     '''
     Simple random state environment. Takes given state, action, and entity spaces and simply samples
-    random states at each tick. This env independent of any assigned agents.
+    random states at each tick. This env is independent of any assigned agents.
     '''
     def tick(self, action=None):
         return self.state_space.sample(), 0, False
 
 class Grid(Env):
+    def __init__(self, width, height, action_space, entity_space):
+        self.width = width
+        self.height = height
+        super().__init__(action_space=action_space, entity_space=entity_space)
+
+        # create internal grid
+        self.grid = []
+        for i in range(width):
+            row = []
+            for j in range(height):
+                row.append(entity_space[0].random(action_space))
+            self.grid.append(row)
+
+    def tick(self, actions):
+        for eid, action in actions.items():
+            self.entities[eid].update(action)
+
+class Physics(Env):
     '''
     Naive implementation, simple velocity and position
     updates on body of defined point objects. Action space
@@ -173,6 +191,9 @@ class Grid(Env):
 
     def clip(self, val, rng):
         return min(max(val, rng[0]), rng[1])
+
+class CellularAutomata(Grid):
+    pass
 
 # class TrafficEnv(Env):
 #     '''

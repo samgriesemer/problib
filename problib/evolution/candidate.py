@@ -141,6 +141,6 @@ class NeuralNetwork(Candidate):
     def update(self):
         self.time_alive += 1
 
-    def action(self):
+    def act(self):
         net = self.epigenesis()
         return net.predict(self.state)[0]
