@@ -13,7 +13,7 @@ class Env():
     actions against ingrained constraints.
 
     This environment module is designed with multi agent systems in mind. Environments
-    dont have to be crafted with specific elements and logic built-in. The implementation
+    don't have to be crafted with specific elements and logic built-in. The implementation
     intends to be general enough to allow for factory object registration; this is often
     important when creating or changing an agents representation in the simulation at run time
     or dynamically before hand. This is where the library differs from existing implementations
