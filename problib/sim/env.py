@@ -92,13 +92,13 @@ class Grid(Env):
         self.height = height
         super().__init__(action_space=action_space, entity_space=entity_space)
 
-        # create internal grid
-        self.grid = []
+        # create default internal grid
+        self.state['grid'] = []
         for i in range(width):
             row = []
             for j in range(height):
-                row.append(entity_space[0].random(action_space))
-            self.grid.append(row)
+                row.append(entity_space[0](action_space[0]))
+            self.state['grid'].append(row)
 
     def tick(self, actions):
         for eid, action in actions.items():
@@ -191,9 +191,6 @@ class Physics(Env):
 
     def clip(self, val, rng):
         return min(max(val, rng[0]), rng[1])
-
-class CellularAutomata(Grid):
-    pass
 
 # class TrafficEnv(Env):
 #     '''

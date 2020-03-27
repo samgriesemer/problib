@@ -51,6 +51,13 @@ class Vector():
         self.y = y
         self.z = z
 
+class State(Entity):
+    def __init__(self, state=None):
+        self.state = state
+
+    def update(self, state):
+        self.state = state
+
 class Cell(Entity):
     def __init__(self, x, y, state={}):
         self.x = x
