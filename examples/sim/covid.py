@@ -1,9 +1,5 @@
 from problib.sim import *
 
-class Automata(agent.Agent):
-    def act(self):
-        for n in self.state['neighbors']:
-
 class LifeAutomata(agent.Agent):
     def act(self):
         alive = 0
@@ -34,3 +30,7 @@ cellgym.register_agent(LifeAutomata(), params=(0,0,'A'))
 
 # consider DEAP registry structure? adds flexibility, removes big init lists
 #env.register('entity_space', [])
+
+# EXPERIMENTAL
+
+
