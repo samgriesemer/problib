@@ -1,4 +1,4 @@
-from . import space, engine
+from . import *
 
 class Env():
     '''
@@ -87,18 +87,19 @@ class RandomState(Env):
         return self.state_space.sample(), 0, False
 
 class Grid(Env):
-    def __init__(self, width, height, action_space, entity_space):
-        self.width = width
-        self.height = height
-        super().__init__(action_space=action_space, entity_space=entity_space)
+    def __init__(self, options):
+        super().__init__(options)
 
         # create default internal grid
-        self.state['grid'] = []
-        for i in range(width):
-            row = []
-            for j in range(height):
-                row.append(entity_space[0](action_space[0]))
-            self.state['grid'].append(row)
+        self.state['entities'] = []
+        for i in range(self.options['width']):
+            for j in range(self.options['height']):
+                cell_state = action_space[0]
+                if (i,j) in self.options['node_list']:
+                    cell_state = self.option['node_list']
+
+                cell = entity.Cell(i, j, cell_state)
+                self.state['entities'].append(cell)
 
     def tick(self, actions):
         for eid, action in actions.items():

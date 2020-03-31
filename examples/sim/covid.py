@@ -18,7 +18,12 @@ class LifeAutomata(agent.Agent):
 params = {
     'width': 5,
     'height': 5,
-    'action_space': ['D','A']
+    'node_list': {
+        (0,0): 'A',
+        (1,0): 'A',
+        (0,1): 'A',
+    }
+    'action_space': ['D','A'],
 }
 
 cellenv = env.Grid(**params)
@@ -32,5 +37,6 @@ cellgym.register_agent(LifeAutomata(), params=(0,0,'A'))
 #env.register('entity_space', [])
 
 # EXPERIMENTAL
-
+#def constraint(pstate, tstate):
+    
 

@@ -58,9 +58,9 @@ class Gym():
     in whether actions are applied before or after tick updates).
 
     Consider something like a `agent_state(agent)` method for grabbing state
-    representation for given agent. Could reducde varying env/gym friction.
+    representation for given agent. Could reduce varying env/gym friction.
     '''
-    def __init__(self, env, agents=[]):
+    def __init__(self, env):
         # set environment and record variables
         self.env = env
         self.state = {}
@@ -69,6 +69,20 @@ class Gym():
         # active agent registry, dict by {aid:agent}
         self.agents = {}
 
+        # create internal agent-entity registry
+        self.registry = {}
+
+        # create views registry for agents {aid:view}
+        self.views = {}
+
+        # class maps
+        self.agent_class_map = {}
+        self.entity_class_map = {}
+
+        # association maps, one for each index
+        self.agent_entity_map = {}
+        self.entity_agent_map = {}
+
         # create agent archive
         self.agent_history = []
 
@@ -76,21 +90,19 @@ class Gym():
         chars = string.printable[:61]
         self.idgen = Product(chars, repeat=6).sample_without_replacement(-1)
 
-        # additional variables
         self.gen = 0
-
-        # register any initial agents
-        self.update_agents(agents)
 
     def tick(self):
         action = {}
         self.gen += 1
         
-        # hot fix for adaptive agent registry, remove in future
-        self.state = copy.deepcopy(self.env.state)
-
         for aid, agent in self.agents.items():
-            action[aid] = agent.act(self.state, self.reward)
+            eid = self.registry[aid]
+
+            # simple check for agent in current state
+            if eid not in self.state: continue
+
+            action[eid] = agent.act(self.state[eid], self.reward)
         self.state, self.reward = self.env.tick(action)
 
     def start(self):
@@ -103,9 +115,16 @@ class Gym():
             yield {'gen'  : self.gen,
                    'state': self.state}
 
-    def register_agent(self, agent):
+    def register_agent(self, agent, entity=None, entity_class=None, entity_params=None):
         # check if agent already in gym
         if agent.id in self.agents: return
+
+        if entity is not None:
+            # instance is provided, register directly
+            self.env.register_entity(entity)
+        elif 
+        else:
+            if 
 
         # otherwise assign id and add to
         # active and historical agent sets
@@ -113,6 +132,21 @@ class Gym():
         agent.id = aid
         self.agents[aid] = agent
         self.agent_history.append((aid,agent))
+
+    def register_agent_class(self, agent_class, class_str):
+        self.agent_class_map[class_str] = agent_class
+
+    def register_entity_class(self, entity_class, class_str):
+        self.agent_class_map[class_str] = entity_class
+
+    def register_mapping(self, agent_class_str, entity_class_str):
+        '''
+        Register an agent-entity class mapping. Note that both classes
+        must be registered as agent or entity class of the gym prior, since
+        this mapping stores only the string representation of the classes.
+        '''
+        self.agent_map[agent_class_str] = entity_class_str
+        self.entity_map[entity_class_str] = agent_class_str
 
     def remove_agent(self, agent):
         self.agents.pop(agent.id, None)
@@ -148,8 +182,6 @@ class PhysicsGym(Gym):
     entity updates propogated back to the env.
     '''
     def __init__(self, env, agents=[]):
-        # create internal agent-entity registry
-        self.registry = {}
 
         # agent change tracker
         self.fresh_state = False
