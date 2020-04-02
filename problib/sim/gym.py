@@ -59,12 +59,20 @@ class Gym():
 
     Consider something like a `agent_state(agent)` method for grabbing state
     representation for given agent. Could reduce varying env/gym friction.
+
+    Gym options allow for 
+    - env: env object to wrap 
+    - entity_agent_map: entity type to agent classes mostly for deciding
+    how to wire up entities created by default
+    - agent_entitiy_map: opposite of above
+    - agents: initial set of agents, follows map rules if they apply, can
+    be a dict mapping to entities
+    - views: dict of agent type to view function
     '''
-    def __init__(self, env):
+    def __init__(self, options):
         # set environment and record variables
-        self.env = env
-        self.state = {}
-        self.reward = {}
+        self.env = options['env']
+        self.packet = {}
 
         # active agent registry, dict by {aid:agent}
         self.agents = {}
@@ -73,15 +81,11 @@ class Gym():
         self.registry = {}
 
         # create views registry for agents {aid:view}
-        self.views = {}
-
-        # class maps
-        self.agent_class_map = {}
-        self.entity_class_map = {}
+        self.views = options.get('views')
 
         # association maps, one for each index
-        self.agent_entity_map = {}
-        self.entity_agent_map = {}
+        self.agent_entity_map = options.get('agent_entity_map')
+        self.entity_agent_map = options.get('entity_agent_map')
 
         # create agent archive
         self.agent_history = []
@@ -97,16 +101,32 @@ class Gym():
         self.gen += 1
         
         for aid, agent in self.agents.items():
-            eid = self.registry[aid]
+            eid = self.registry.get(aid)
+            state = self.packet['state']
 
             # simple check for agent in current state
-            if eid not in self.state: continue
+            if eid not in state['entities']: continue
+            entity = state['entities'][eid]
 
-            action[eid] = agent.act(self.state[eid], self.reward)
-        self.state, self.reward = self.env.tick(action)
+            # render agent view
+            if type(entity) in self.views:
+                subpacket = self.views[type(entity)](self.packet, aid, eid)
+
+            action[eid] = agent.auto(subpacket)
+        self.packet = self.env.tick(action)
 
     def start(self):
-        self.state = self.env.state
+        '''
+        Perform necessary initialization measures out of init.
+        '''
+        self.packet = self.env.packet
+
+        # add agents for default entities; initial list will have any existin defaults
+        # and none of them will exist in the gym yet
+        for entity in self.packet['state']['entities']:
+            if 'default' in self.entity_agent_map:
+                agent = self.entity_agent_map['default']()
+                self.register_agent(agent, 'default', eid)
 
     def run(self, gens=-1):
         self.start()
@@ -115,41 +135,42 @@ class Gym():
             yield {'gen'  : self.gen,
                    'state': self.state}
 
-    def register_agent(self, agent, entity=None, entity_class=None, entity_params=None):
+    def register_agent(self, agent, entity='random', eid=None):
+        '''
+        TODO: allow simple override, can specify agent already in gym
+        along with new entity to assign it to
+        '''
         # check if agent already in gym
         if agent.id in self.agents: return
 
         if entity is not None:
             # instance is provided, register directly
-            self.env.register_entity(entity)
-        elif 
+            #eid = self.env.create(entity)
+            pass
+        elif type(agent) in self.agent_entity_map:
+            # exists a map behaviour, use it
+            eclass = self.agent_entity_map[type(agent)]()
+            #self.env.create(eclass)
+        elif entity == 'default':
+            # do not register any entities, do nothing
+            pass
         else:
-            if 
+            # create default entity randomly?
+            #eid = self.env.create('random')
+            pass
 
         # otherwise assign id and add to
         # active and historical agent sets
         aid = 'a'+''.join(next(self.idgen))
         agent.id = aid
         self.agents[aid] = agent
+        self.registry[aid] = eid
         self.agent_history.append((aid,agent))
-
-    def register_agent_class(self, agent_class, class_str):
-        self.agent_class_map[class_str] = agent_class
-
-    def register_entity_class(self, entity_class, class_str):
-        self.agent_class_map[class_str] = entity_class
-
-    def register_mapping(self, agent_class_str, entity_class_str):
-        '''
-        Register an agent-entity class mapping. Note that both classes
-        must be registered as agent or entity class of the gym prior, since
-        this mapping stores only the string representation of the classes.
-        '''
-        self.agent_map[agent_class_str] = entity_class_str
-        self.entity_map[entity_class_str] = agent_class_str
 
     def remove_agent(self, agent):
         self.agents.pop(agent.id, None)
+        self.env.remove_entity(self.registry[agent.id])
+        self.registry.pop(agent.id)
 
     def update_agents(self, agents):
         '''
@@ -168,11 +189,11 @@ class Gym():
             temp[agent.id] = agent
         self.agents = temp
 
-    def agent_state(self, agent):
-        return self.state[agent.id]
-
-    def refresh_state(self):
-        pass
+        for aid, eid in self.registry.copy().items():
+            if aid not in self.agents:
+                self.env.remove_entity(eid)
+                self.registry.pop(aid)
+        self.fresh_state = False
 
 
 class PhysicsGym(Gym):
@@ -244,12 +265,3 @@ class PhysicsGym(Gym):
                 self.env.remove_entity(eid)
                 self.registry.pop(aid)
         self.fresh_state = False
-
-    def refresh_state(self):
-        if not self.fresh_state:
-            self.state = self.env.state
-            self.fresh_state = True
-
-    def agent_state(self, agent):
-        eid = self.registry[agent.id]
-        return self.state[eid] 

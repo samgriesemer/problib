@@ -10,12 +10,31 @@ class LifeAutomata(agent.Agent):
             if alive == 2 or alive == 3:
                 return 'A'
             else: return 'D'
-        else:
+        else
             if alive == 3:
                 return 'A'
             else: return 'D'
 
-params = {
+def neighbors(packet, aid, eid):
+    entity_index = packet['extra']['pos_index']
+    entity = state['entities'][eid]
+    pos = (entity.x, entity.y)
+    state = {'self': packet['state'][eid].state}
+    neighbor_list = []
+
+    for i in range(-1,2):
+        for j in range(-1,2):
+            if i == 0 and j == 0: continue
+            if entity_index[(pos[0]+i,pos[1]+j)]:
+                nstate = entity_index[(pos[0]+i,pos[1]+j)].state
+                neighbor_list.append[nstate]
+
+    state['neighbors'] = neighbor_list
+    packet['state'] = state
+    return packet
+
+
+cellenv = env.Grid({
     'width': 5,
     'height': 5,
     'node_list': {
@@ -24,14 +43,18 @@ params = {
         (0,1): 'A',
     }
     'action_space': ['D','A'],
-}
+})
 
-cellenv = env.Grid(**params)
-cellgym = gym.Gym(cellenv)
+cellgym = gym.Gym({
+    'env': cellenv,
+    'entity_agent_map': {
+        'default': LifeAutomata
+    }
+    'views': {
+        LifeAutomata: neighbors
+    }
+})
 
-cellgym.register_agent_class(LifeAutomata, 'life_automata')
-cellgym.register_map('life_automata', 'default')
-cellgym.register_agent(LifeAutomata(), params=(0,0,'A'))
 
 # consider DEAP registry structure? adds flexibility, removes big init lists
 #env.register('entity_space', [])

@@ -1,4 +1,4 @@
-from . import *
+from . import entity
 
 class Env():
     '''
@@ -19,7 +19,7 @@ class Env():
     or dynamically before hand. This is where the library differs from existing implementations
     like OpenAI's gym library; it uses a more general and flexible approach.
     '''
-    def __init__(self, state_space=None, action_space=None, entity_space=None, engine=None):
+    def __init__(self, options):
         # define spaces
         self.state_space  = state_space
         self.action_space = action_space
@@ -33,6 +33,13 @@ class Env():
         # entity dict mapping from entity name (string) to list of those object types currently
         # registered by the environment
         self.entities = {}
+
+        # entity name-class map, merge with defaults
+        self.entity_map = options.get('entity_map')
+
+        # entity creation scheme, pass to create
+        self.init_entities = options.get('something')
+        self.create(self.init_entities)
 
     def tick(self, action, sandbox=False):
         '''
@@ -88,22 +95,41 @@ class RandomState(Env):
 
 class Grid(Env):
     def __init__(self, options):
-        super().__init__(options)
+        self.width = options['width']
+        self.height = options['height']
+        self.node_list = options['node_list']
+        super().__init__(action_space=options['action_space'])
+
+        self.pos_index = {}
 
         # create default internal grid
         self.state['entities'] = []
-        for i in range(self.options['width']):
-            for j in range(self.options['height']):
-                cell_state = action_space[0]
-                if (i,j) in self.options['node_list']:
-                    cell_state = self.option['node_list']
+        for i in range(self.width):
+            for j in range(self.height):
+                cell_state = self.action_space[0]
+                if (i,j) in self.node_list:
+                    cell_state = self.node_list
 
+                # should use the create() method instead
                 cell = entity.Cell(i, j, cell_state)
                 self.state['entities'].append(cell)
+                self.pos_index[(i,j)] = cell
 
     def tick(self, actions):
         for eid, action in actions.items():
             self.entities[eid].update(action)
+        return self.packet
+
+    @property
+    def packet(self):
+        return {
+            'state': self.state,
+            'reward': None,
+            'done': False,
+            'extra': {
+                'pos_index': self.pos_index
+            }
+        }
 
 class Physics(Env):
     '''
