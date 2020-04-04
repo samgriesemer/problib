@@ -20,26 +20,18 @@ class Env():
     like OpenAI's gym library; it uses a more general and flexible approach.
     '''
     def __init__(self, options):
-        # define spaces
-        self.state_space  = state_space
-        self.action_space = action_space
-        self.entity_space = entity_space
-        self.engine = engine
+        # required general options
+        self.action_space = options['action_space']
+        self.entity_space = options['entity_space']
 
         # full environment state, describes every piece of information that would be needed to
         # recreate the same state in a different instance
         self.state = {}
 
-        # entity dict mapping from entity name (string) to list of those object types currently
-        # registered by the environment
+        # canonical entity dict mapping from entity id (string) to entity instances
         self.entities = {}
 
-        # entity name-class map, merge with defaults
-        self.entity_map = options.get('entity_map')
 
-        # entity creation scheme, pass to create
-        self.init_entities = options.get('something')
-        self.create(self.init_entities)
 
     def tick(self, action, sandbox=False):
         '''
@@ -57,16 +49,7 @@ class Env():
         '''
         return self.state, 0, False
 
-    def draw(self):
-        '''
-        Return view of internal environment state. This method is currently
-        undefined as there is no standard view protocol. This may ultimately
-        be removed considering visualization is left to client side Javascript
-        objects. Could be used to render pixels for purely vision-based envs.
-        '''
-        pass
-
-    def create(self, type, params):
+    def create(self, options):
         '''
         Create an entity of the specified type, use the given params. Used to populate
         the environment with objects necessary to the simulation. This method is provided
@@ -75,7 +58,19 @@ class Env():
 
         :type: An entity from the entity space
         '''
-        pass
+        # handle list of types, all initialized using defaults
+        if isinstance(options, list):
+            pass
+        elif isinstance(options, dict):
+            for entity_name, params in options.items():
+                entity_class = self.entity_map[entity_name]
+
+                if 'count' in params:
+                    for i in range(params['count']):
+                        entity = entity_class(**params['params'])
+        else: pass
+
+
 
 class Static(Env):
     '''
@@ -95,14 +90,36 @@ class RandomState(Env):
 
 class Grid(Env):
     def __init__(self, options):
+        # initialize base
+        super().__init__(options)
+
+        ### STRUCTURE ###
+        # required parametric structure
         self.width = options['width']
         self.height = options['height']
-        self.node_list = options['node_list']
-        super().__init__(action_space=options['action_space'])
 
+        # optional parametric structure
+        self.node_list = options.get('node_list')
+
+        
+        ### CLASS SPECIFICATION ###
+        # base entities
+        self.entity_space.update({
+            'cell': entity.Cell
+        })
+        
+        # parametric entities, extend default entity_map.
+        # Note this is handled by the base env, as it's shared
+        # functionality by all envs.
+
+        
+        ### INDEXES ###
+        # create base entity indexes (for now no directly parametric support)
         self.pos_index = {}
 
-        # create default internal grid
+        
+        ### ENTITY CREATION ###
+        # default internal entities (all external directed through create())
         self.state['entities'] = []
         for i in range(self.width):
             for j in range(self.height):
@@ -111,6 +128,11 @@ class Grid(Env):
                     cell_state = self.node_list
 
                 # should use the create() method instead
+                self.create('cell', {
+                    'params': {'x':i, 'y':j, 'state':cell_state},
+                    'group': 'default'
+                })
+
                 cell = entity.Cell(i, j, cell_state)
                 self.state['entities'].append(cell)
                 self.pos_index[(i,j)] = cell
@@ -131,7 +153,10 @@ class Grid(Env):
             }
         }
 
-class Physics(Env):
+    def create(self, options):
+
+
+class Box(Env):
     '''
     Naive implementation, simple velocity and position
     updates on body of defined point objects. Action space
