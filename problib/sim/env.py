@@ -1,4 +1,7 @@
+import string
+
 from . import entity
+from ..combinatorics.counting import Product
 
 class Env():
     '''
@@ -20,9 +23,25 @@ class Env():
     like OpenAI's gym library; it uses a more general and flexible approach.
     '''
     def __init__(self, options):
-        # required general options
-        self.action_space = options['action_space']
-        self.entity_space = options['entity_space']
+        # base env variables, expect inheriting env to modify these according
+        # their own defaults. Since these get set whether the client specifies them
+        # or not (that's where `options` is coming from, the inheriting env knows
+        # they will at least be set to a null value Note that this null value needs
+        # to still be a valid object of each of these respective types, perhaps a space.
+        # Even when empty, the "null" object still needs to be able to be used without
+        # throwing errors all over the place because it's not a "expected null format", if
+        # you will.
+        self.action_space = {}
+        if 'action_space' in options:
+            self.action_space = options['action_space']
+
+        self.entity_space = {}
+        if 'entity_space' in options:
+            self.entity_space = options['entity_space']
+
+        self.index_space = {}
+        if 'index_space' in options:
+            self.index_space = options['index_space']
 
         # full environment state, describes every piece of information that would be needed to
         # recreate the same state in a different instance
@@ -31,7 +50,14 @@ class Env():
         # canonical entity dict mapping from entity id (string) to entity instances
         self.entities = {}
 
+        self.indexes = {}
 
+        # entity groups, determine if part of indexes or deserve distinction
+        self.groups = {'default': [], 'all': []}
+
+        # create id generator
+        chars = string.printable[:61]
+        self.idgen = Product(chars, repeat=3).sample_without_replacement(-1)
 
     def tick(self, action, sandbox=False):
         '''
@@ -49,7 +75,7 @@ class Env():
         '''
         return self.state, 0, False
 
-    def create(self, options):
+    def create(self, entity_name, opts={}):
         '''
         Create an entity of the specified type, use the given params. Used to populate
         the environment with objects necessary to the simulation. This method is provided
@@ -58,19 +84,34 @@ class Env():
 
         :type: An entity from the entity space
         '''
-        # handle list of types, all initialized using defaults
-        if isinstance(options, list):
-            pass
-        elif isinstance(options, dict):
-            for entity_name, params in options.items():
-                entity_class = self.entity_map[entity_name]
+        if entity_name not in self.entity_space:
+            raise Exception('Entity not recognized by environment')
 
-                if 'count' in params:
-                    for i in range(params['count']):
-                        entity = entity_class(**params['params'])
-        else: pass
+        options = {
+            'params': {},
+            'count': 1,
+            'groups': []
+        }
+        
+        options.update(opts)
+        entity_class = self.entity_space[entity_name]
 
+        for _ in range(options['count']):
+            entity = entity_class(**options['params'])
+            eid = entity_name+''.join(next(self.idgen))
+            self.entities[eid] = entity
+            entity.id = eid
 
+            self.groups['all'].append(entity)
+            for group in options['groups']:
+                if group not in self.groups:
+                    self.groups[group] = []
+                self.groups[group].append(entity)
+
+            for index, func in self.index_space[entity_name]:
+                index[func(entity)] = entity
+
+        return entity
 
 class Static(Env):
     '''
@@ -92,8 +133,12 @@ class Grid(Env):
     def __init__(self, options):
         # initialize base
         super().__init__(options)
+        
+        #### STRUCTURE ####
+        ### LOCAL STRUCTURE ###
+        ## SET LOCAL DEFAULT BASE STRUCTURE
 
-        ### STRUCTURE ###
+        ## SET LOCAL PARAMETRIZED BASE STRUCTURE
         # required parametric structure
         self.width = options['width']
         self.height = options['height']
@@ -101,60 +146,56 @@ class Grid(Env):
         # optional parametric structure
         self.node_list = options.get('node_list')
 
-        
-        ### CLASS SPECIFICATION ###
+        ### GLOBAL STRUCTURE ####
+        ## SET GLOBAL DEFAULT BASE STRUCTURE 
         # base entities
         self.entity_space.update({
             'cell': entity.Cell
         })
         
-        # parametric entities, extend default entity_map.
-        # Note this is handled by the base env, as it's shared
-        # functionality by all envs.
-
+        # no default for action_space, deferred entirely to base
+        # and thus must be user defined
         
-        ### INDEXES ###
-        # create base entity indexes (for now no directly parametric support)
-        self.pos_index = {}
+        ## SET GLOBAL PARAMETRIZED BASE STRUCTURE
+        # (this is handled by the base env!)
 
+        ### INDEXES ###
+        # create base entity indexes (for now no direct parametric support)
+        self.index_space.update({
+            'pos': lambda x: return (x.i, x.j)
+        })
         
         ### ENTITY CREATION ###
         # default internal entities (all external directed through create())
-        self.state['entities'] = []
         for i in range(self.width):
             for j in range(self.height):
                 cell_state = self.action_space[0]
                 if (i,j) in self.node_list:
-                    cell_state = self.node_list
+                    cell_state = self.node_list[(i,j)]
 
-                # should use the create() method instead
                 self.create('cell', {
                     'params': {'x':i, 'y':j, 'state':cell_state},
-                    'group': 'default'
+                    'groups': ['default']
                 })
-
-                cell = entity.Cell(i, j, cell_state)
-                self.state['entities'].append(cell)
-                self.pos_index[(i,j)] = cell
 
     def tick(self, actions):
         for eid, action in actions.items():
             self.entities[eid].update(action)
+            self.state['entities'] = [vars(e) for e in self.entities.values()]
         return self.packet
 
     @property
     def packet(self):
         return {
-            'state': self.state,
+            'state': {
+                'entities' = [vars(e) for e in self.entities.values()]
+            },
             'reward': None,
             'done': False,
             'extra': {
-                'pos_index': self.pos_index
+                'indexes': self.
             }
         }
-
-    def create(self, options):
-
 
 class Box(Env):
     '''
