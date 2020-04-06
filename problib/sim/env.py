@@ -1,6 +1,7 @@
 import string
 
 from . import entity
+from ..utils.options import Opt
 from ..combinatorics.counting import Product
 
 class Env():
@@ -31,17 +32,17 @@ class Env():
         # Even when empty, the "null" object still needs to be able to be used without
         # throwing errors all over the place because it's not a "expected null format", if
         # you will.
-        self.action_space = {}
-        if 'action_space' in options:
-            self.action_space = options['action_space']
+        opts = {
+            'action_space': {},
+            'entity_map': {},
+            'index_map': {},
+            'default_map': {}
+        }
 
-        self.entity_space = {}
-        if 'entity_space' in options:
-            self.entity_space = options['entity_space']
+        opts.update(options)
 
-        self.index_space = {}
-        if 'index_space' in options:
-            self.index_space = options['index_space']
+        # set all passed options
+        self.__dict__.update(opts)
 
         # full environment state, describes every piece of information that would be needed to
         # recreate the same state in a different instance
@@ -50,9 +51,10 @@ class Env():
         # canonical entity dict mapping from entity id (string) to entity instances
         self.entities = {}
 
-        self.indexes = {}
+        # actually create indexes
+        self.indexes = {name: {} for name in self.index_map}
 
-        # entity groups, determine if part of indexes or deserve distinction
+        # entity groups, distinct from indexes, are created dynamically as entities are created
         self.groups = {'default': [], 'all': []}
 
         # create id generator
@@ -75,43 +77,74 @@ class Env():
         '''
         return self.state, 0, False
 
-    def create(self, entity_name, opts={}):
+    def create(self, entity_name, options={}):
         '''
         Create an entity of the specified type, use the given params. Used to populate
         the environment with objects necessary to the simulation. This method is provided
         for working with environments that need to be dynamic and update the entities within
         while the simulation is running.
 
-        :type: An entity from the entity space
+        NOTE: If multiple groups are given, the entity will be registered to all of them. They
+        will be indexed by all indexes assigned to those groups, along with any others
+        specified by the user. Default params used will remain empty if more than 1 of the
+        provided groups has different default parameters since it is non-trivial which the user
+        wants to select from. In that case, the user should specify their own options. This 
+        situation should raise a warning to let the user know that the group defaults conflict, 
+        and we are defaulting to a "null" valued initialization process.
         '''
-        if entity_name not in self.entity_space:
+        if entity_name not in self.entity_map:
             raise Exception('Entity not recognized by environment')
 
-        options = {
-            'params': {},
-            'count': 1,
-            'groups': []
-        }
-        
-        options.update(opts)
-        entity_class = self.entity_space[entity_name]
+        # get defaults based on groups
+        plist = []
+        indexes = []
+        for group in options.get('groups', [])+['all', entity_name]:
+            default = self.default_map.get(group, {})
+            if default is not None:
+                if default.get('indexes') is not None:
+                    indexes += default['indexes']
+                if default.get('params') is not None:
+                    plist += default['params']
 
-        for _ in range(options['count']):
-            entity = entity_class(**options['params'])
+        # if all params are the same, use that as default, else use {}
+        params = {}
+        if len(plist) > 0 and plist.count(plist[0]) == len(plist):
+            params = plist[0]
+
+        # set defaults and merge with user options
+        opts = Opt({
+            'params': params,
+            'count': 1,
+            'groups': ['all', entity_name],
+            'indexes': indexes
+        })
+
+        opts.set_pattern({
+            'params': 'merge',
+            'groups': 'merge',
+            'indexes': 'merge'
+        })
+
+        opts.update(options)
+        
+        # create entities
+        entity_class = self.entity_map[entity_name]
+        for _ in range(opts['count']):
+            entity = entity_class(**opts['params'])
             eid = entity_name+''.join(next(self.idgen))
             self.entities[eid] = entity
             entity.id = eid
 
-            self.groups['all'].append(entity)
-            for group in options['groups']:
+            # add entity to groups
+            for group in opts['groups']:
                 if group not in self.groups:
                     self.groups[group] = []
                 self.groups[group].append(entity)
 
-            for index, func in self.index_space[entity_name]:
-                index[func(entity)] = entity
-
-        return entity
+            # add entity to indexes
+            for index in opts['indexes']:
+                key = self.index_map[index](entity)
+                self.indexes[index][key] = entity
 
 class Static(Env):
     '''
@@ -131,39 +164,37 @@ class RandomState(Env):
 
 class Grid(Env):
     def __init__(self, options):
+        opts = Opt({
+            'node_list': [],
+            'entity_map': {
+                'cell': entity.Cell
+            },
+            'index_map': {
+                'pos': lambda e: (e.x, e.y)
+            },
+            'default_map': {
+                'cell': {
+                    'indexes': ['pos']
+                }
+            }
+        })
+
+        opts.set_pattern({
+            'width': 'require',
+            'height': 'require',
+            'node_list': 'optional',
+            'entity_map': 'merge',
+            'index_map': 'merge',
+            'default_map': 'merge'
+        })
+
+        opts.update(options)
+
         # initialize base
-        super().__init__(options)
-        
-        #### STRUCTURE ####
-        ### LOCAL STRUCTURE ###
-        ## SET LOCAL DEFAULT BASE STRUCTURE
+        super().__init__(opts)
 
-        ## SET LOCAL PARAMETRIZED BASE STRUCTURE
-        # required parametric structure
-        self.width = options['width']
-        self.height = options['height']
-
-        # optional parametric structure
-        self.node_list = options.get('node_list')
-
-        ### GLOBAL STRUCTURE ####
-        ## SET GLOBAL DEFAULT BASE STRUCTURE 
-        # base entities
-        self.entity_space.update({
-            'cell': entity.Cell
-        })
-        
-        # no default for action_space, deferred entirely to base
-        # and thus must be user defined
-        
-        ## SET GLOBAL PARAMETRIZED BASE STRUCTURE
-        # (this is handled by the base env!)
-
-        ### INDEXES ###
-        # create base entity indexes (for now no direct parametric support)
-        self.index_space.update({
-            'pos': lambda x: return (x.i, x.j)
-        })
+        # NOTE: we could also set the variables themselves by default, create an Opt
+        # from __dict__, and update from there, eventually merging back with __dict__
         
         ### ENTITY CREATION ###
         # default internal entities (all external directed through create())
@@ -188,12 +219,12 @@ class Grid(Env):
     def packet(self):
         return {
             'state': {
-                'entities' = [vars(e) for e in self.entities.values()]
+                'entities': [vars(e) for e in self.entities.values()]
             },
             'reward': None,
             'done': False,
             'extra': {
-                'indexes': self.
+                'indexes': self.indexes
             }
         }
 
