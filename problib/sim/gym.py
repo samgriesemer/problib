@@ -2,6 +2,7 @@ import string
 import copy
 
 from ..combinatorics.counting import Product
+from ..utils.options import Opt
 
 class Gym():
     '''
@@ -70,8 +71,21 @@ class Gym():
     - views: dict of agent type to view function
     '''
     def __init__(self, options):
-        # set environment and record variables
-        self.env = options['env']
+        opts = Opt({
+            'agent_map': {},
+            'default_map': {},
+            'entity_agent_map': {}
+        })
+
+        opts.set_pattern({
+            'env': 'require'
+        })
+
+        opts.update(options)
+
+        # set all passed options
+        self.__dict__.update(opts)
+
         self.packet = {}
 
         # active agent registry, dict by {aid:agent}
@@ -80,12 +94,11 @@ class Gym():
         # create internal agent-entity registry
         self.registry = {}
 
-        # create views registry for agents {aid:view}
-        self.views = options.get('views')
+        # agent groups
+        self.groups = {}
 
-        # association maps, one for each index
-        self.agent_entity_map = options.get('agent_entity_map')
-        self.entity_agent_map = options.get('entity_agent_map')
+        # create views registry for agents {aid:view}, dynamically filled on creation
+        self.views = {}
 
         # create agent archive
         self.agent_history = []
@@ -100,18 +113,17 @@ class Gym():
         action = {}
         self.gen += 1
         
+        state = self.packet['state']
         for aid, agent in self.agents.items():
-            eid = self.registry.get(aid)
-            state = self.packet['state']
+            eid = self.registry[aid]
 
             # simple check for agent in current state
             if eid not in state['entities']: continue
             entity = state['entities'][eid]
 
             # render agent view
-            if type(entity) in self.views:
-                subpacket = self.views[type(entity)](self.packet, aid, eid)
-
+            #subpacket = self.views[aid](copy.deepcopy(self.packet), aid, eid)
+            subpacket = self.views[aid](self.packet, aid, eid)
             action[eid] = agent.auto(subpacket)
         self.packet = self.env.tick(action)
 
@@ -123,56 +135,117 @@ class Gym():
 
         # add agents for default entities; initial list will have any existin defaults
         # and none of them will exist in the gym yet
-        for entity in self.packet['state']['entities']:
+        for eid in self.packet['state']['entities']:
             if 'default' in self.entity_agent_map:
-                agent = self.entity_agent_map['default']()
-                self.register_agent(agent, 'default', eid)
-
+                agent_name = self.entity_agent_map['default']
+                self.create(agent_name, {'eid':eid})
+ 
     def run(self, gens=-1):
         self.start()
         while self.gen != gens:
             self.tick()
-            yield {'gen'  : self.gen,
-                   'state': self.state}
+            yield {
+                'gen'  : self.gen,
+                'state': [vars(e) for e in self.packet['state']['entities'].values()],
+                'pos': self.packet['extra']['indexes']['pos']
+            }
 
-    def register_agent(self, agent, entity='random', eid=None):
+
+    def create(self, agent_name, options={}):
         '''
+        Create new agent
+
         TODO: allow simple override, can specify agent already in gym
         along with new entity to assign it to
         '''
-        # check if agent already in gym
-        if agent.id in self.agents: return
+        if agent_name not in self.agent_map:
+            raise Exception('Entity not recognized by gym')
 
-        if entity is not None:
-            # instance is provided, register directly
-            #eid = self.env.create(entity)
-            pass
-        elif type(agent) in self.agent_entity_map:
-            # exists a map behaviour, use it
-            eclass = self.agent_entity_map[type(agent)]()
-            #self.env.create(eclass)
-        elif entity == 'default':
-            # do not register any entities, do nothing
-            pass
-        else:
-            # create default entity randomly?
-            #eid = self.env.create('random')
-            pass
+        # get defaults based on groups
+        plist = []
+        vlist = []
+        elist = []
+        eoptlist = []
+        for group in options.get('groups', [])+['all', agent_name]:
+            default = self.default_map.get(group, {})
+            if default is not None:
+                if default.get('view') is not None:
+                    vlist.append(default['view'])
+                if default.get('params') is not None:
+                    plist.append(default['params'])
+                if default.get('entity') is not None:
+                    elist.append(default['entity'])
+                if default.get('entity_opts') is not None:
+                    eoptlist.append(default['entity_opts'])
 
-        # otherwise assign id and add to
-        # active and historical agent sets
-        aid = 'a'+''.join(next(self.idgen))
-        agent.id = aid
-        self.agents[aid] = agent
-        self.registry[aid] = eid
-        self.agent_history.append((aid,agent))
+        # if all params are the same, use that as default, else use {}
+        params = {}
+        if len(plist) > 0 and plist.count(plist[0]) == len(plist):
+            params = plist[0]
 
-    def remove_agent(self, agent):
+        # use default views if all are same, otherwise set default as identity
+        view = lambda s: s
+        if len(vlist) > 0 and vlist.count(vlist[0]) == len(vlist):
+            view = vlist[0]
+
+        # if all params are the same, use that as default, else use {}
+        entity = None
+        if len(elist) > 0 and elist.count(elist[0]) == len(elist):
+            entity = elist[0]
+
+        # if all params are the same, use that as default, else use {}
+        entity_opts = {}
+        if len(eoptlist) > 0 and eoptlist.count(eoptlist[0]) == len(eoptlist):
+            entity_opts = eoptlist[0]
+
+        # set defaults and merge with user options
+        opts = Opt({
+            'params': params,
+            'count': 1,
+            'groups': ['all', agent_name],
+            'view': view,
+            'entity': entity,
+            'entity_opts': entity_opts
+        })
+
+        opts.set_pattern({
+            'params': 'merge',
+            'groups': 'merge',
+        })
+
+        opts.update(options)
+        
+        # create agents 
+        agent_class = self.agent_map[agent_name]
+        for _ in range(opts['count']):
+            agent = agent_class(**opts['params'])
+            aid = agent_name+''.join(next(self.idgen))
+            agent.id = aid
+            self.agents[aid] = agent
+            self.agent_history.append((aid,agent))
+
+            # add agent to groups
+            for group in opts['groups']:
+                if group not in self.groups:
+                    self.groups[group] = []
+                self.groups[group].append(agent)
+
+            # add view to view index
+            self.views[aid] = opts['view']
+
+            # create associated entity (if desired, kind of hacky? functionality to skip entity creation)
+            if opts.get('eid') is not None:
+                # skip creation, register directly
+                self.registry[aid] = opts['eid']
+            else:
+                self.registry[aid] = self.env.create(opts['entity'], opts['entity_opts'])[0]
+
+    def remove(self, agent):
         self.agents.pop(agent.id, None)
         self.env.remove_entity(self.registry[agent.id])
         self.registry.pop(agent.id)
 
-    def update_agents(self, agents):
+    def update(self, agents, entity_group='all'):
         '''
         Takes a list of agents to sets gym to have only those agents. This
         process is slightly more nuanced than setting the .agents variable;
@@ -182,86 +255,24 @@ class Gym():
         of the gym. Note that this identification is based on the signature
         of the agent instance itself; that is, the gym will treat a copy of
         an existing agent as something different than the original.
+
+        Perform update pattern, recognizing the overlap between the given list
+        of agents and those already registering, and actually registering those
+        not currently in the system to new entities under the provided group.
+        This provided group sets the boundary of the update set. This is roughly
+        equivalent to an `enter()` and `remove()` application like in D3
         '''
-        temp = {}
-        for agent in agents:
-            self.register_agent(agent)
-            temp[agent.id] = agent
-        self.agents = temp
-
-        for aid, eid in self.registry.copy().items():
-            if aid not in self.agents:
-                self.env.remove_entity(eid)
-                self.registry.pop(aid)
-        self.fresh_state = False
-
-
-class PhysicsGym(Gym):
-    '''
-    Extend standard Gym interface by adding physics entity-agent
-    management. Overrides agent registry methods with additional
-    entity updates propogated back to the env.
-    '''
-    def __init__(self, env, agents=[]):
-
-        # agent change tracker
-        self.fresh_state = False
         
-        # perform standard gym initialization
-        super().__init__(env, agents)
 
-    def tick(self):
-        '''
-        Addressing problem of newly added agents not being represented
-        in currently held state. For now iterate over eid's directly
-        as opposed to all gym agents, i.e. only agents recognized by
-        environment
-        '''
-        action = {}
-        self.gen += 1
+        #temp = {}
+        #for agent in agents:
+            #self.register_agent(agent, {group)
+            #temp[agent.id] = agent
+        #self.agents = temp
+#
+        #for aid, eid in self.registry.copy().items():
+            #if aid not in self.agents:
+                #self.env.remove_entity(eid)
+                #self.registry.pop(aid)
+        #self.fresh_state = False
 
-        # refresh internal state to match agent-entity changes
-        self.refresh_state()
-
-        for aid, agent in self.agents.items():
-            eid = self.registry[aid]
-
-            # simple check for agent in current state
-            if eid not in self.state: continue
-
-            action[eid] = agent.act(self.state[eid], None)
-        self.state, self.reward = self.env.tick(action)
-        self.fresh_state = True
-
-    def register_agent(self, agent):
-        # check if agent already in gym
-        if agent.id in self.agents: return
-
-        super().register_agent(agent)
-        
-        # create entity for agent
-        eid = self.env.random_entity()
-
-        # store entity-agent pair in registry
-        self.registry[agent.id] = eid
-        self.fresh_state = False
-
-    def remove_agent(self, agent):
-        super().remove_agent(agent)
-        self.env.remove_entity(self.registry[agent.id])
-        self.registry.pop(agent.id)
-        self.fresh_state = False
-
-    def update_agents(self, agents):
-        '''
-        act explicitly for now, could implement "update" pattern
-        through env and into engine
-        UPDATE: turned into decent solution, no longer mega slow
-        list lookup. Still consider above remark
-        '''
-        super().update_agents(agents)
-        for aid, eid in self.registry.copy().items():
-            if aid not in self.agents:
-                self.env.remove_entity(eid)
-                self.registry.pop(aid)
-        self.fresh_state = False

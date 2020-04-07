@@ -104,7 +104,7 @@ class Env():
                 if default.get('indexes') is not None:
                     indexes += default['indexes']
                 if default.get('params') is not None:
-                    plist += default['params']
+                    plist.append(default['params'])
 
         # if all params are the same, use that as default, else use {}
         params = {}
@@ -128,12 +128,14 @@ class Env():
         opts.update(options)
         
         # create entities
+        new_entities = []
         entity_class = self.entity_map[entity_name]
         for _ in range(opts['count']):
             entity = entity_class(**opts['params'])
             eid = entity_name+''.join(next(self.idgen))
             self.entities[eid] = entity
             entity.id = eid
+            new_entities.append(eid)
 
             # add entity to groups
             for group in opts['groups']:
@@ -145,6 +147,8 @@ class Env():
             for index in opts['indexes']:
                 key = self.index_map[index](entity)
                 self.indexes[index][key] = entity
+
+        return new_entities
 
 class Static(Env):
     '''
@@ -212,14 +216,15 @@ class Grid(Env):
     def tick(self, actions):
         for eid, action in actions.items():
             self.entities[eid].update(action)
-            self.state['entities'] = [vars(e) for e in self.entities.values()]
         return self.packet
 
     @property
     def packet(self):
+        # need to consider use of deep copies
         return {
             'state': {
-                'entities': [vars(e) for e in self.entities.values()]
+                #'entities': [vars(e) for e in self.entities.values()]
+                'entities': self.entities # should only be updated in tick and create
             },
             'reward': None,
             'done': False,

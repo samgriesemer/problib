@@ -47,11 +47,16 @@ cellenv = env.Grid({
 
 cellgym = gym.Gym({
     'env': cellenv,
-    'entity_agent_map': {
-        'default': LifeAutomata
+    'agent_map': {
+        'life_automata': LifeAutomata
+    },
+    'default_map': {
+        'life_automata': {
+            'view': neighbors,
+            'entity': 'cell'
     }
-    'views': {
-        LifeAutomata: neighbors
+    'entity_agent_map': {
+        'default': 'life_automata'
     }
 })
 

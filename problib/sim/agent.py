@@ -37,7 +37,7 @@ class Agent():
         # agent identifier
         self.id = None
 
-    def observe(self, state, reward):
+    def observe(self, packet):
         '''
         Interpret incoming environment state. The structure of this state should
         either be coordinated with the environment or known by the agent. This
@@ -62,7 +62,8 @@ class Agent():
         agent itself; rather, it's a piece of information like the state that is
         communicated by the environment.
         '''
-        pass
+        self.state = packet['state']
+        self.reward = packet['reward']
 
     def update(self):
         '''
@@ -95,14 +96,14 @@ class Agent():
         '''
         pass
 
-    def auto(self, state, reward):
+    def auto(self, packet):
         '''
         Define basic boilerplate for processing external stimulus and generating
         a following action. This is the primary endpoint for interacting with the
         agent, and should be used by external APIs such as the gym.
         '''
         # pass new information to observation process
-        self.observe(state, reward)
+        self.observe(packet)
 
         # update internal model (if defined)
         self.update()
@@ -111,8 +112,8 @@ class Agent():
         action = self.act()
 
         # populate history tracking variables
-        self.state_history.append(state)
-        self.reward_history.append(reward)
+        self.state_history.append(self.state)
+        self.reward_history.append(self.reward)
         self.action_history.append(action)
 
         return action
