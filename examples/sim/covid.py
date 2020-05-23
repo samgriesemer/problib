@@ -10,7 +10,7 @@ class LifeAutomata(agent.Agent):
             if alive == 2 or alive == 3:
                 return 'A'
             else: return 'D'
-        else
+        else:
             if alive == 3:
                 return 'A'
             else: return 'D'
@@ -62,7 +62,10 @@ cellgym = gym.Gym({
 
 
 # consider DEAP registry structure? adds flexibility, removes big init lists
-#env.register('entity_space', [])
+env.register('entity_space', [])
+env.register_entities({})
+env.set_defaults({})
+
 
 # EXPERIMENTAL
 #def constraint(pstate, tstate):
