@@ -23,7 +23,7 @@ class Env():
     or dynamically before hand. This is where the library differs from existing implementations
     like OpenAI's gym library; it uses a more general and flexible approach.
     '''
-    def __init__(self, options):
+    def __init__(self, options={}):
         # base env variables, expect inheriting env to modify these according
         # their own defaults. Since these get set whether the client specifies them
         # or not (that's where `options` is coming from, the inheriting env knows
@@ -33,6 +33,7 @@ class Env():
         # throwing errors all over the place because it's not a "expected null format", if
         # you will.
         opts = {
+            'state_space': {},
             'action_space': {},
             'entity_map': {},
             'index_map': {},
@@ -165,6 +166,15 @@ class RandomState(Env):
     '''
     def tick(self, action=None):
         return self.state_space.sample(), 0, False
+
+class Grid(Env):
+    def __init__(self, width, height, node_list=[], **kwargs):
+        super().__init__(**kwargs)
+
+        # okay this is nice but how do i define internal defaults?
+        self.entity_map = {
+            'cell': entity.Cell
+        }
 
 class Grid(Env):
     def __init__(self, options):
