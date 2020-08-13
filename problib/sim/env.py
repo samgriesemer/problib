@@ -6,38 +6,42 @@ from ..combinatorics.counting import Product
 
 class Env():
     '''
-    Base environment class outlining simple tick, draw, and create methods. All
-    environments to be used inside a Gym or interacting with Agent types
-    should inherit this interface. Need to provide a state and action space
-    for defining valid actions and return states.
+    Base environment class outlining `tick` and `create` methods. All environments used
+    within a Gym or interacting with Agent types should inherit this interface. The state
+    space is implicitly defined by the internal update/management logic within `tick`,
+    while the action space needs to be provided (and known internally by) the inheriting
+    environment.
 
     Environments encompass all of the components necessary for action execution.
     Environments should be independent of the agents interacting with it; it is not
-    concerned with how the agents make decisions but only how to execute submitted
-    actions against ingrained constraints.
+    concerned with how the agents make decisions but only how to execute submitted actions
+    against ingrained constraints.
 
-    This environment module is designed with multi agent systems in mind. Environments
-    don't have to be crafted with specific elements and logic built-in. The implementation
-    intends to be general enough to allow for factory object registration; this is often
-    important when creating or changing an agents representation in the simulation at run time
-    or dynamically before hand. This is where the library differs from existing implementations
-    like OpenAI's gym library; it uses a more general and flexible approach.
+    This environment module is designed with multi-agent systems in mind.
+
+    This class is the defining component of the multi-agent system simulation framework.
+    It is the highest level of abstraction in the environment creation complexity chain,
+    laying out the core components common to all functioning downstream environments.
+    Subclassing this interface is akin to creating an engine: defining some core
+    structure/substrate, a space of possible entities that can exist within this
+    substrate, and a set of constraints both among entities and between entities and the
+    core structure.
     '''
     def __init__(self, options={}):
-        # base env variables, expect inheriting env to modify these according
-        # their own defaults. Since these get set whether the client specifies them
-        # or not (that's where `options` is coming from, the inheriting env knows
-        # they will at least be set to a null value Note that this null value needs
-        # to still be a valid object of each of these respective types, perhaps a space.
-        # Even when empty, the "null" object still needs to be able to be used without
-        # throwing errors all over the place because it's not a "expected null format", if
-        # you will.
+        '''
+        '''
+        # base env variables, expect inheriting env to modify these according their own
+        # defaults. Since these get set whether the client specifies them or not (that's
+        # where `options` is coming from, the inheriting env knows they will at least be
+        # set to a null value Note that this null value needs to still be a valid object
+        # of each of these respective types, perhaps a space.  Even when empty, the "null"
+        # object still needs to be able to be used without throwing errors all over the
+        # place because it's not a "expected null format", if you will.
         opts = {
-            'state_space': {},
             'action_space': {},
             'entity_map': {},
             'index_map': {},
-            'default_map': {}
+            'group_map': {}
         }
 
         opts.update(options)
@@ -77,6 +81,8 @@ class Env():
         NEW: sandbox execution mode, to accommodate rollouts and internal agent planning simulations
         '''
         return self.state, 0, False
+
+    
 
     def create(self, entity_name, options={}):
         '''
@@ -151,6 +157,7 @@ class Env():
 
         return new_entities
 
+
 class Static(Env):
     '''
     Environment for defining a static state. To be used as a simple environment object
@@ -189,6 +196,14 @@ class Grid(Env):
             'default_map': {
                 'cell': {
                     'indexes': ['pos']
+                }
+            },
+            'group_map': {
+                'cell': {
+                    'type': entity.Cell,
+                    'indexes': {
+                        'pos': lambda e: (e.x, e.y)
+                    }
                 }
             }
         })
@@ -250,7 +265,7 @@ class Box(Env):
     includes all real number within velocity ranges, and the state
     is the current set of physics entities and their 2D positions.
 
-    For now, the state (method) property is not resitricted and is
+    For now, the state (method) property is not restricted and is
     encouraged to update state after entity creation/removal has occurred.
     No other entity state's are affected, so no standard implementation
     should expect any side effects. Ultimately this may need reconsideration,

@@ -94,7 +94,7 @@ class Agent():
         information has been processed and necessary model changes have been made,
         implying the agent should have everything it needs to make a final decision.
         '''
-        pass
+        return None
 
     def auto(self, packet):
         '''
