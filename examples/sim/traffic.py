@@ -33,3 +33,11 @@ traffic = TrafficEnv({
     'roads': roadnet
 })
 
+#########
+
+entities = [Car(1), Car(2), Car(3)]
+agents = [Agent1(), Agent2(), Agent3()]
+
+traffic.add(entities, agents, 'main')
+
+traffic.select('main').add(entities, agents)
