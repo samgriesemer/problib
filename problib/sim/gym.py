@@ -133,8 +133,8 @@ class Gym():
         '''
         self.packet = self.env.packet
 
-        # add agents for default entities; initial list will have any existin defaults
-        # and none of them will exist in the gym yet
+        # add agents for default entities; initial list will have any existin
+        # defaults and none of them will exist in the gym yet
         for eid in self.packet['state']['entities']:
             if 'default' in self.entity_agent_map:
                 agent_name = self.entity_agent_map['default']

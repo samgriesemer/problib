@@ -80,4 +80,22 @@ mon.select('properties').data([
     {'name': 'Boardwalk', 'cost': 1e6},
 ]).enter()
 
+#######
+
+class MonopolyEnv(env.Env):
+    def __init__(
+        self,
+        board_size=16,
+        player_range=[2,8]
+    ):
+        self.board_size = board_size
+        self.player_range = player_range
+
+
+        super().__init__(
+            action_space={},
+            entity_map={
+                'player': Player
+            },
+        )
 
