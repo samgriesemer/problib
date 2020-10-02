@@ -82,8 +82,6 @@ class Env():
         '''
         return self.state, 0, False
 
-    
-
     def create(self, entity_name, options={}):
         '''
         Create an entity of the specified type, use the given params. Used to populate
@@ -95,8 +93,8 @@ class Env():
         will be indexed by all indexes assigned to those groups, along with any others
         specified by the user. Default params used will remain empty if more than 1 of the
         provided groups has different default parameters since it is non-trivial which the user
-        wants to select from. In that case, the user should specify their own options. This 
-        situation should raise a warning to let the user know that the group defaults conflict, 
+        wants to select from. In that case, the user should specify their own options. This
+        situation should raise a warning to let the user know that the group defaults conflict,
         and we are defaulting to a "null" valued initialization process.
         '''
         if entity_name not in self.entity_map:
@@ -133,7 +131,7 @@ class Env():
         })
 
         opts.update(options)
-        
+
         # create entities
         new_entities = []
         entity_class = self.entity_map[entity_name]
@@ -224,7 +222,7 @@ class Grid(Env):
 
         # NOTE: we could also set the variables themselves by default, create an Opt
         # from __dict__, and update from there, eventually merging back with __dict__
-        
+
         ### ENTITY CREATION ###
         # default internal entities (all external directed through create())
         for i in range(self.width):

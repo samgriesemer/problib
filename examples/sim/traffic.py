@@ -75,3 +75,41 @@ traffic.add(entities, 'group_name')
 traffic.add(bunny_entities, 'bunnies')
 traffic.add(fox_entities, 'foxes')
 
+
+########
+
+## ENV CREATION ##
+
+# initialize new traffic env
+traffic = TrafficEnv({
+    'state_space': states,
+    'action_space': actions,
+    'entity_space': entities,
+    'roads': roadnet
+})
+
+### registering entities ###
+#### -- 1 -- ####
+traffic.select('fast_cars')
+.append([Car(1), Car(2)])
+
+def update_func(e,i): e.attr = 'new value'
+.update(update_func)
+
+.remove()
+
+#### -- 2 -- ####
+traffic.add('fast_cars', [Car(1), Car(2)])
+
+#### -- 3 -- ####
+traffic.add({
+    'fast_cars': [Car(1), Car(2)],
+    'slow_cars': [Car(3), Car(4)]
+})
+
+#### -- 4 -- ####
+traffic.select('fast_cars', {
+    'enter': lambda e,i: Car(i),
+    'update': update_func,
+    'remove': None
+})
