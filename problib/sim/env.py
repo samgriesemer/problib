@@ -84,20 +84,32 @@ class Env():
 
         if type(entities) is list:
             # handle array of entities
+            for entity in entities:
+                self._add(entity, group_name)
         elif type(entities) is dict:
             # handle named collections of entities
+            for group, entities in entities.items():
+                for entity in entities:
+                    self._add(entity, group)
         else:
             # handle assumed singleton entity
-            if type(entities) in self.entity_space:
+            self._add(entity, group_name)
 
-        # create a singleton add and just call that for each individual entity to add
-
-    def _add_entity(self, entity, group_name):
+    def _add(self, entity, group_name):
         if type(entity) not in self.entity_space:
             raise
+       
+        # add to 'all' group and 'eid' group
+        self.entities[entity.eid] = entity
+        self.entities['all'].append(entity)
 
-        self.groups[group_name]
-
+        if group_name not None:
+            if group_name not in self.entities:
+                self.entities[group_name] = []
+            self.entities[group_name].append(entity)
+    
+    def add_index(self, func, group_name, index_name=None):
+        self.indexes[group_name] = func
 
 
     def create(self, entity_name, options={}):
