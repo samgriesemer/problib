@@ -1,5 +1,6 @@
 from problib.sim import *
 
+
 class TrafficEnv(env.Env):
     def __init__(self, roads: graph.Graph):
         self.roads = roads
@@ -81,12 +82,12 @@ traffic.add(fox_entities, 'foxes')
 ## ENV CREATION ##
 
 # initialize new traffic env
-traffic = TrafficEnv({
-    'state_space': states,
-    'action_space': actions,
-    'entity_space': entities,
-    'roads': roadnet
-})
+traffic = TrafficEnv(
+    state_space=states,
+    action_space=actions,
+    entity_space=entities,
+    roads=roadnet
+)
 
 ### registering entities ###
 #### -- 1 -- ####

@@ -71,3 +71,28 @@ env.set_defaults({})
 #def constraint(pstate, tstate):
     
 
+cellenv = env.Grid(
+    width=5,
+    height=5,
+    node_list={
+        (0,0): 'A',
+        (1,0): 'A',
+        (0,1): 'A',
+    },
+    action_space=['D','A'],
+)
+
+cellgym = gym.Gym({
+    env=cellenv,
+    agent_map={
+        'life_automata': LifeAutomata
+    },
+    'default_map': {
+        'life_automata': {
+            'view': neighbors,
+            'entity': 'cell'
+    }
+    'entity_agent_map': {
+        'default': 'life_automata'
+    }
+})

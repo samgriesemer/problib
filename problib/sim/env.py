@@ -39,15 +39,8 @@ class Env():
         # place because it's not a "expected null format", if you will.
         opts = {
             'action_space': {},
-            'entity_map': {},
-            'index_map': {},
-            'group_map': {}
+            'entity_space': {},
         }
-
-        opts.update(options)
-
-        # set all passed options
-        self.__dict__.update(opts)
 
         # full environment state, describes every piece of information that would be needed to
         # recreate the same state in a different instance
@@ -57,7 +50,7 @@ class Env():
         self.entities = {}
 
         # actually create indexes
-        self.indexes = {name: {} for name in self.index_map}
+        self.indexes = {}
 
         # entity groups, distinct from indexes, are created dynamically as entities are created
         self.groups = {'default': [], 'all': []}
@@ -81,6 +74,31 @@ class Env():
         NEW: sandbox execution mode, to accommodate rollouts and internal agent planning simulations
         '''
         return self.state, 0, False
+
+    def add(self, entities, group_name=None):
+        '''
+        Add entities to the environment, under an optional group. Function accepts either
+        a list of objects, a dictionary of named groups, or a singleton entity. Checks to
+        ensure the entity types are with the specified entity space.
+        '''
+
+        if type(entities) is list:
+            # handle array of entities
+        elif type(entities) is dict:
+            # handle named collections of entities
+        else:
+            # handle assumed singleton entity
+            if type(entities) in self.entity_space:
+
+        # create a singleton add and just call that for each individual entity to add
+
+    def _add_entity(self, entity, group_name):
+        if type(entity) not in self.entity_space:
+            raise
+
+        self.groups[group_name]
+
+
 
     def create(self, entity_name, options={}):
         '''
@@ -173,7 +191,12 @@ class RandomState(Env):
         return self.state_space.sample(), 0, False
 
 class Grid(Env):
-    def __init__(self, width, height, node_list=[], **kwargs):
+    def __init__(
+            self,
+            width,
+            height,
+            node_list=[],
+            **kwargs):
         super().__init__(**kwargs)
 
         # okay this is nice but how do i define internal defaults?
@@ -281,6 +304,8 @@ class Box(Env):
         # create underlying physics engine
         self.engine = Engine(entities)
 
+      and _action specific logic_, i.e. it has no idea how to execute actions submitted
+      by the agents.
     @classmethod
     def random(cls, n, width, height, vxrng, vyrng, axrng, ayrng):
         '''

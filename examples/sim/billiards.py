@@ -57,3 +57,52 @@ bld.add({
 
 # create gym
 poolgym = gym.Gym(bld)
+
+
+#### existing billiards setup ####
+bounds = [
+    InfiniteWall((0, 0), (length, 0)),  # bottom side
+    InfiniteWall((length, 0), (length, width)),  # right side
+    InfiniteWall((length, width), (0, width)),  # top side
+    InfiniteWall((0, width), (0, 0))  # left side
+]
+bld = billiards.Billiard(obstacles=bounds)
+
+# add non-cue balls
+for i in range(4):
+    for j in range(i + 1):
+        x = 0.75 * length + radius * sqrt(3) * i
+        y = width / 2 + radius * (2 * j - i)
+        bld.add_ball((x, y), (0, 0), radius)
+        
+# add cue ball (random position and velocity)
+bld.add_ball((params[0], params[1]), (velx, vely), radius)
+
+
+#### ideal billiards setup ####
+class BilliardBall(Entity):
+    def __init__(pos, vel, radius):
+        self.pos = pos
+        self.vel = vel
+        self.radius = radius
+
+class Billiard(Env):
+    def __init__(self, bounds):
+        self.bounds = bounds
+
+        super.__init__(
+            entity_space=BilliardBall,
+            action_space=
+        )
+
+bld = Billiard(bounds)
+bld.add(BilliardBall(x, y, vx, vy), 'cue')
+
+balls = []
+for i in range(4):
+    for j in range(i + 1):
+        x = 0.75 * length + radius * sqrt(3) * i
+        y = width / 2 + radius * (2 * j - i)
+        balls.append(BilliardBall((x, y), (0, 0), radius))
+
+bld.add(balls, '8ball')
