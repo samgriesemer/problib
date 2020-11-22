@@ -70,7 +70,7 @@ class Gym():
     be a dict mapping to entities
     - views: dict of agent type to view function
     '''
-    def __init__(self, options):
+    def __init__(self, agent_space):
         opts = Opt({
             'agent_map': {},
             'default_map': {},

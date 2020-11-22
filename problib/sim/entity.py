@@ -1,4 +1,12 @@
 class Entity:
+    def __init__(self):
+        self._id = None
+        self._groups = []
+
+    def update(self):
+        pass
+
+class Point:
     '''
     TODO: consider making this a numpy array based class for efficient updates
     Clear this out, should be abstract
@@ -60,6 +68,7 @@ class State(Entity):
 
 class Cell(Entity):
     def __init__(self, x, y, state={}):
+        super().__init__()
         self.x = x
         self.y = y
         self.state = state

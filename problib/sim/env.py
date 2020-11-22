@@ -1,7 +1,7 @@
 import string
 
 from . import entity
-from ..utils.options import Opt
+from ..utils import naming
 from ..combinatorics.counting import Product
 
 class Env():
@@ -27,7 +27,7 @@ class Env():
     substrate, and a set of constraints both among entities and between entities and the
     core structure.
     '''
-    def __init__(self, options={}):
+    def __init__(self, action_space, entity_space):
         '''
         '''
         # base env variables, expect inheriting env to modify these according their own
@@ -37,23 +37,23 @@ class Env():
         # of each of these respective types, perhaps a space.  Even when empty, the "null"
         # object still needs to be able to be used without throwing errors all over the
         # place because it's not a "expected null format", if you will.
-        opts = {
-            'action_space': {},
-            'entity_space': {},
-        }
+        self.action_space = action_space
+        self.entity_space = entity_space
 
         # full environment state, describes every piece of information that would be needed to
-        # recreate the same state in a different instance
+        # recreate the same state in a different instance. The state space is implicitly
+        # defined by the environment structure and entities.
         self.state = {}
 
         # canonical entity dict mapping from entity id (string) to entity instances
         self.entities = {}
 
-        # actually create indexes
-        self.indexes = {}
+        # while eids are fine as groups, keep them exclusively in entities. Explicit group
+        # names go in groups
+        self.groups = {}
 
-        # entity groups, distinct from indexes, are created dynamically as entities are created
-        self.groups = {'default': [], 'all': []}
+        self.indexes = {}
+        self.index_map = {}
 
         # create id generator
         chars = string.printable[:61]
@@ -73,118 +73,119 @@ class Env():
 
         NEW: sandbox execution mode, to accommodate rollouts and internal agent planning simulations
         '''
-        return self.state, 0, False
+        # can we control when we index? no need to waste time indexing on iterations we
+        # dont need the results. presumably this is an edge case; registered indexes are
+        # likely needed by views each time step
 
-    def add(self, entities, group_name=None):
+        # What about indexes we only need on initialization? like giant filters that
+        # capture newly registered entities and make them available based on some
+        # unchanging part of its state, and would otherwise _knowably_ waste computation
+        # re-indexing each time? Seems reasonable; take the grid for example, once
+        # entities are created at their positions they aren't removed. No point in
+        # recomputing each time. Could tie in with a more general control schematic,
+        # whereby the initial indexing is merely an simple case of allowing indexing once
+        # and not again. Not that this might mean an index _needs to exist prior to the
+        # entity's registration_ in order to be properly indexed. 
+        # Or not...might just have a two way check. When entities are registered they get
+        # indexed under existing indexes, and when indexes get registered, they are
+        # immediately applied to all applicable entities under their control groups.
+        # Pretty simple.
+
+        for eid, action in actions.items():
+            self.entities[eid].update(action)
+        return self.packet
+
+    @property
+    def packet(self):
+        return {
+            'state': {
+                'entities': self.entities # should only be updated in tick and create
+            },
+            'reward': None,
+            'done': False,
+            'extra': {
+                'indexes': self.indexes
+            }
+        }
+
+    def add(self, entities, groups=[]):
         '''
         Add entities to the environment, under an optional group. Function accepts either
         a list of objects, a dictionary of named groups, or a singleton entity. Checks to
         ensure the entity types are with the specified entity space.
         '''
-
         if type(entities) is list:
-            # handle array of entities
             for entity in entities:
-                self._add(entity, group_name)
+                self._add(entity, groups)
         elif type(entities) is dict:
-            # handle named collections of entities
             for group, entities in entities.items():
                 for entity in entities:
-                    self._add(entity, group)
+                    self._add(entity, groups)
         else:
-            # handle assumed singleton entity
-            self._add(entity, group_name)
+            self._add(entities, groups)
 
-    def _add(self, entity, group_name):
+    def _add(self, entity, groups):
+        '''
+        Internal add method. Adds singleton entity to environment, registers to groups,
+        hashes under associated indexes. Type checks under entity space
+        '''
+        # check type compliance with entity space
         if type(entity) not in self.entity_space:
-            raise
-       
-        # add to 'all' group and 'eid' group
-        self.entities[entity.eid] = entity
-        self.entities['all'].append(entity)
+            raise Exception('Entity type not recognized by environment')
 
-        if group_name not None:
-            if group_name not in self.entities:
-                self.entities[group_name] = []
-            self.entities[group_name].append(entity)
-    
-    def add_index(self, func, group_name, index_name=None):
-        self.indexes[group_name] = func
+        # synchronize variable single string or list of strings input
+        if type(groups) is not list: groups = [groups]
 
+        if 'all' not in groups: groups.append('all')
 
-    def create(self, entity_name, options={}):
-        '''
-        Create an entity of the specified type, use the given params. Used to populate
-        the environment with objects necessary to the simulation. This method is provided
-        for working with environments that need to be dynamic and update the entities within
-        while the simulation is running.
-
-        NOTE: If multiple groups are given, the entity will be registered to all of them. They
-        will be indexed by all indexes assigned to those groups, along with any others
-        specified by the user. Default params used will remain empty if more than 1 of the
-        provided groups has different default parameters since it is non-trivial which the user
-        wants to select from. In that case, the user should specify their own options. This
-        situation should raise a warning to let the user know that the group defaults conflict,
-        and we are defaulting to a "null" valued initialization process.
-        '''
-        if entity_name not in self.entity_map:
-            raise Exception('Entity not recognized by environment')
-
-        # get defaults based on groups
-        plist = []
-        indexes = []
-        for group in options.get('groups', [])+['all', entity_name]:
-            default = self.default_map.get(group, {})
-            if default is not None:
-                if default.get('indexes') is not None:
-                    indexes += default['indexes']
-                if default.get('params') is not None:
-                    plist.append(default['params'])
-
-        # if all params are the same, use that as default, else use {}
-        params = {}
-        if len(plist) > 0 and plist.count(plist[0]) == len(plist):
-            params = plist[0]
-
-        # set defaults and merge with user options
-        opts = Opt({
-            'params': params,
-            'count': 1,
-            'groups': ['all', entity_name],
-            'indexes': indexes
-        })
-
-        opts.set_pattern({
-            'params': 'merge',
-            'groups': 'merge',
-            'indexes': 'merge'
-        })
-
-        opts.update(options)
-
-        # create entities
-        new_entities = []
-        entity_class = self.entity_map[entity_name]
-        for _ in range(opts['count']):
-            entity = entity_class(**opts['params'])
-            eid = entity_name+''.join(next(self.idgen))
+        # check if entity already in environment, could use core id() or eid
+        if not (entity._id and self.entities.get(entity._id)):
+            typestr = naming.camel_to_snake(type(entity).__name__)
+            eid = typestr + '_' + ''.join(next(self.idgen))
             self.entities[eid] = entity
-            entity.id = eid
-            new_entities.append(eid)
+            entity._id = eid
+            groups.append(typestr)
 
-            # add entity to groups
-            for group in opts['groups']:
-                if group not in self.groups:
-                    self.groups[group] = []
-                self.groups[group].append(entity)
+        for group in groups:
+            if group not in self.groups:
+                self.groups[group] = []
+            
+            # continue if entity already register to group
+            if group in entity._groups: continue
 
-            # add entity to indexes
-            for index in opts['indexes']:
-                key = self.index_map[index](entity)
-                self.indexes[index][key] = entity
+            self.groups[group].append(entity)
+            entity._groups.append(group)
 
-        return new_entities
+            # hash entity under group indexes
+            for index, func in self.index_map.get(group, {}).items():
+                self.indexes[index][func(entity)] = entity
 
+    def remove(self):
+        pass
+
+    def add_index(self, index, func, groups=['all']):
+        '''
+        Registers index under specified name, applicable to all entities under the list of
+        groups specified. Function is applied on the state of the entity (i.e. the entity
+        instance is passed into the function), yielding a hashable index mapping back to
+        the entity instance.
+        '''
+        if type(groups) is not list: groups = [groups]
+
+        for group in groups:
+            if group not in self.index_map:
+                self.index_map[group] = {}
+            self.index_map[group][index] = func
+
+            if index not in self.indexes:
+                self.indexes[index] = {}
+
+            # index all existing group entities
+            for entity in self.groups[group]:
+                self.indexes[index][func(entity)] = entity
+
+    def remove_index(self, index, groups=[]):
+        pass
 
 class Static(Env):
     '''
@@ -204,92 +205,106 @@ class RandomState(Env):
 
 class Grid(Env):
     def __init__(
-            self,
-            width,
-            height,
-            node_list=[],
-            **kwargs):
-        super().__init__(**kwargs)
+        self,
+        width,
+        height,
+        node_list=[]
+    ):
+        self.width = width
+        self.height = height
+        self.node_list = node_list
 
-        # okay this is nice but how do i define internal defaults?
-        self.entity_map = {
-            'cell': entity.Cell
-        }
-
-class Grid(Env):
-    def __init__(self, options):
-        opts = Opt({
-            'node_list': [],
-            'entity_map': {
-                'cell': entity.Cell
-            },
-            'index_map': {
-                'pos': lambda e: (e.x, e.y)
-            },
-            'default_map': {
-                'cell': {
-                    'indexes': ['pos']
-                }
-            },
-            'group_map': {
-                'cell': {
-                    'type': entity.Cell,
-                    'indexes': {
-                        'pos': lambda e: (e.x, e.y)
-                    }
-                }
-            }
-        })
-
-        opts.set_pattern({
-            'width': 'require',
-            'height': 'require',
-            'node_list': 'optional',
-            'entity_map': 'merge',
-            'index_map': 'merge',
-            'default_map': 'merge'
-        })
-
-        opts.update(options)
-
-        # initialize base
-        super().__init__(opts)
-
-        # NOTE: we could also set the variables themselves by default, create an Opt
-        # from __dict__, and update from there, eventually merging back with __dict__
-
-        ### ENTITY CREATION ###
-        # default internal entities (all external directed through create())
-        for i in range(self.width):
-            for j in range(self.height):
+        super().__init__(
+            entity_space=[entity.Cell],
+            action_space=list(string.printable)
+        )
+        
+        # create grid cell entities
+        cells = []
+        for i in range(width):
+            for j in range(height):
                 cell_state = self.action_space[0]
                 if (i,j) in self.node_list:
                     cell_state = self.node_list[(i,j)]
+                cells.append(entity.Cell(i, j, cell_state))
+        
+        # register grid cells under default group
+        self.add(cells, 'default')
 
-                self.create('cell', {
-                    'params': {'x':i, 'y':j, 'state':cell_state},
-                    'groups': ['default']
-                })
-
-    def tick(self, actions):
-        for eid, action in actions.items():
-            self.entities[eid].update(action)
-        return self.packet
-
-    @property
-    def packet(self):
-        # need to consider use of deep copies
-        return {
-            'state': {
-                #'entities': [vars(e) for e in self.entities.values()]
-                'entities': self.entities # should only be updated in tick and create
-            },
-            'reward': None,
-            'done': False,
-            'extra': {
-                'indexes': self.indexes
-            }
-        }
+#class Grid(Env):
+#    def __init__(self, options):
+#        opts = Opt({
+#            'node_list': [],
+#            'entity_map': {
+#                'cell': entity.Cell
+#            },
+#            'index_map': {
+#                'pos': lambda e: (e.x, e.y)
+#            },
+#            'default_map': {
+#                'cell': {
+#                    'indexes': ['pos']
+#                }
+#            },
+#            'group_map': {
+#                'cell': {
+#                    'type': entity.Cell,
+#                    'indexes': {
+#                        'pos': lambda e: (e.x, e.y)
+#                    }
+#                }
+#            }
+#        })
+#
+#        opts.set_pattern({
+#            'width': 'require',
+#            'height': 'require',
+#            'node_list': 'optional',
+#            'entity_map': 'merge',
+#            'index_map': 'merge',
+#            'default_map': 'merge'
+#        })
+#
+#        opts.update(options)
+#
+#        # initialize base
+#        super().__init__(opts)
+#
+#        # NOTE: we could also set the variables themselves by default, create an Opt
+#        # from __dict__, and update from there, eventually merging back with __dict__
+#
+#        ### ENTITY CREATION ###
+#        # default internal entities (all external directed through create())
+#        for i in range(self.width):
+#            for j in range(self.height):
+#                cell_state = self.action_space[0]
+#                if (i,j) in self.node_list:
+#                    cell_state = self.node_list[(i,j)]
+#
+#                self.create('cell', {
+#                    'params': {'x':i, 'y':j, 'state':cell_state},
+#                    'groups': ['default']
+#                })
+#
+#    def tick(self, actions):
+#        for eid, action in actions.items():
+#            self.entities[eid].update(action)
+#        return self.packet
+#
+#    @property
+#    def packet(self):
+#        # need to consider use of deep copies
+#        return {
+#            'state': {
+#                #'entities': [vars(e) for e in self.entities.values()]
+#                'entities': self.entities # should only be updated in tick and create
+#            },
+#            'reward': None,
+#            'done': False,
+#            'extra': {
+#                'indexes': self.indexes
+#            }
+#        }
 
 class Box(Env):
     '''
@@ -316,8 +331,6 @@ class Box(Env):
         # create underlying physics engine
         self.engine = Engine(entities)
 
-      and _action specific logic_, i.e. it has no idea how to execute actions submitted
-      by the agents.
     @classmethod
     def random(cls, n, width, height, vxrng, vyrng, axrng, ayrng):
         '''
