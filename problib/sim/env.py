@@ -40,9 +40,9 @@ class Env():
         self.action_space = action_space
         self.entity_space = entity_space
 
-        # full environment state, describes every piece of information that would be needed to
-        # recreate the same state in a different instance. The state space is implicitly
-        # defined by the environment structure and entities.
+        # full environment state, describes every piece of information that would be
+        # needed to recreate the same state in a different instance. The state space is
+        # implicitly defined by the environment structure and entities.
         self.state = {}
 
         # canonical entity dict mapping from entity id (string) to entity instances
@@ -62,16 +62,18 @@ class Env():
     def tick(self, action, sandbox=False):
         '''
         Execute given agent(s) action(s) and perform single environment tick. Can be
-        dynamic (e.g. call on physics engine) or static. Agent actions are subject
-        to internally defined constraints (i.e. agent desires may not be executed
-        exactly as intended due to realistic limitations). Returns a tuple containing the
-        new environment state, the reward, and whether or not the env has reached termination.
+        dynamic (e.g. call on physics engine) or static. Agent actions are subject to
+        internally defined constraints (i.e. agent desires may not be executed exactly as
+        intended due to realistic limitations). Returns a tuple containing the new
+        environment state, the reward, and whether or not the env has reached termination.
 
-        This method implements what is commonly referred to as the "successor/transition function".
-        It is a function that maps input from the state space (current state), action space X entity space
-        (submitted agent actions) to the state space (next state)
+        This method implements what is commonly referred to as the "successor/transition
+        function".  It is a function that maps input from the state space (current state),
+        action space X entity space (submitted agent actions) to the state space (next
+        state)
 
-        NEW: sandbox execution mode, to accommodate rollouts and internal agent planning simulations
+        NEW: sandbox execution mode, to accommodate rollouts and internal agent planning
+        simulations
         '''
         # can we control when we index? no need to waste time indexing on iterations we
         # dont need the results. presumably this is an edge case; registered indexes are
@@ -85,11 +87,10 @@ class Env():
         # recomputing each time. Could tie in with a more general control schematic,
         # whereby the initial indexing is merely an simple case of allowing indexing once
         # and not again. Not that this might mean an index _needs to exist prior to the
-        # entity's registration_ in order to be properly indexed. 
-        # Or not...might just have a two way check. When entities are registered they get
-        # indexed under existing indexes, and when indexes get registered, they are
-        # immediately applied to all applicable entities under their control groups.
-        # Pretty simple.
+        # entity's registration_ in order to be properly indexed. Or not...might just
+        # have a two way check. When entities are registered they get indexed under
+        # existing indexes, and when indexes get registered, they are immediately applied
+        # to all applicable entities under their control groups. Pretty simple.
 
         for eid, action in actions.items():
             self.entities[eid].update(action)
@@ -197,8 +198,9 @@ class Static(Env):
 
 class RandomState(Env):
     '''
-    Simple random state environment. Takes given state, action, and entity spaces and simply samples
-    random states at each tick. This env is independent of any assigned agents.
+    Simple random state environment. Takes given state, action, and entity spaces and
+    simply samples random states at each tick. This env is independent of any assigned
+    agents.
     '''
     def tick(self, action=None):
         return self.state_space.sample(), 0, False

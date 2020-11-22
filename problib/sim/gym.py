@@ -70,15 +70,11 @@ class Gym():
     be a dict mapping to entities
     - views: dict of agent type to view function
     '''
-    def __init__(self, agent_space):
+    def __init__(self, env, agent_space):
         opts = Opt({
             'agent_map': {},
             'default_map': {},
             'entity_agent_map': {}
-        })
-
-        opts.set_pattern({
-            'env': 'require'
         })
 
         opts.update(options)
@@ -149,6 +145,8 @@ class Gym():
                 'state': [vars(e) for e in self.packet['state']['entities'].values()],
                 'pos': self.packet['extra']['indexes']['pos']
             }
+
+    def add(self,
 
 
     def create(self, agent_name, options={}):
