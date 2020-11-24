@@ -55,6 +55,9 @@ class Env():
         self.indexes = {}
         self.index_map = {}
 
+        self.views = {}
+        self.registry = {}
+
         # create id generator
         chars = string.printable[:61]
         self.idgen = Product(chars, repeat=3).sample_without_replacement(-1)
@@ -95,6 +98,16 @@ class Env():
         for eid, action in actions.items():
             self.entities[eid].update(action)
         return self.packet
+
+    def run(self, gens=-1):
+        self.start()
+        while self.gen != gens:
+            self.tick()
+            yield {
+                'gen'  : self.gen,
+                'state': [vars(e) for e in self.packet['state']['entities'].values()],
+                'pos': self.packet['extra']['indexes']['pos']
+            }
 
     @property
     def packet(self):

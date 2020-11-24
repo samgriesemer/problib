@@ -71,17 +71,6 @@ class Gym():
     - views: dict of agent type to view function
     '''
     def __init__(self, env, agent_space):
-        opts = Opt({
-            'agent_map': {},
-            'default_map': {},
-            'entity_agent_map': {}
-        })
-
-        opts.update(options)
-
-        # set all passed options
-        self.__dict__.update(opts)
-
         self.packet = {}
 
         # active agent registry, dict by {aid:agent}
@@ -146,7 +135,21 @@ class Gym():
                 'pos': self.packet['extra']['indexes']['pos']
             }
 
-    def add(self,
+    def add(self, entities, groups=[]):
+        '''
+        Add entities to the environment, under an optional group. Function accepts either
+        a list of objects, a dictionary of named groups, or a singleton entity. Checks to
+        ensure the entity types are with the specified entity space.
+        '''
+        if type(entities) is list:
+            for entity in entities:
+                self._add(entity, groups)
+        elif type(entities) is dict:
+            for group, entities in entities.items():
+                for entity in entities:
+                    self._add(entity, groups)
+        else:
+            self._add(entities, groups)
 
 
     def create(self, agent_name, options={}):
