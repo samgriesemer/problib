@@ -61,8 +61,8 @@ class Gym():
     Consider something like a `agent_state(agent)` method for grabbing state
     representation for given agent. Could reduce varying env/gym friction.
 
-    Gym options allow for 
-    - env: env object to wrap 
+    Gym options allow for
+    - env: env object to wrap
     - entity_agent_map: entity type to agent classes mostly for deciding
     how to wire up entities created by default
     - agent_entitiy_map: opposite of above
