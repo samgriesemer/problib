@@ -48,15 +48,20 @@ class Env():
         # canonical entity dict mapping from entity id (string) to entity instances
         self.entities = {}
 
+        # canonical entity dict mapping from entity id (string) to entity instances
+        self.agents = {}
+
+        self.registry = {}
+
         # while eids are fine as groups, keep them exclusively in entities. Explicit group
         # names go in groups
-        self.groups = {}
+        self.entity_groups = {}
+        self.agent_groups = {}
 
         self.indexes = {}
         self.index_map = {}
 
         self.views = {}
-        self.registry = {}
 
         # create id generator
         chars = string.printable[:61]
