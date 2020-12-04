@@ -58,10 +58,13 @@ class Env():
         self.entity_groups = {}
         self.agent_groups = {}
 
+        # indexes and mappings
         self.indexes = {}
         self.index_map = {}
-
+        
+        # views and mappings
         self.views = {}
+        self.views_map = {}
 
         # create id generator
         chars = string.printable[:61]
@@ -126,6 +129,10 @@ class Env():
                 'indexes': self.indexes
             }
         }
+
+    def add_entities(self, entities, groups=[]):
+
+    def add_agents(self, agents, groups=[]):
 
     def add(self, entities, groups=[]):
         '''
