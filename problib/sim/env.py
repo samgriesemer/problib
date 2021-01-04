@@ -132,8 +132,6 @@ class Env():
 
     def add_entities(self, entities, groups=[]):
 
-    def add_agents(self, agents, groups=[]):
-
     def add(self, entities, groups=[]):
         '''
         Add entities to the environment, under an optional group. Function accepts either
