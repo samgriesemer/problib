@@ -106,3 +106,46 @@ for i in range(4):
         balls.append(BilliardBall((x, y), (0, 0), radius))
 
 bld.add(balls, '8ball')
+
+## new structure ##
+### env comp ###
+class BilliardBall(Entity):
+    def __init__(pos, vel, radius):
+        self.pos = pos
+        self.vel = vel
+        self.radius = radius
+
+class Billiard(Env):
+    def __init__(self, bounds):
+        self.bounds = bounds
+
+        super.__init__(
+            entity_space=BilliardBall,
+            action_space=
+        )
+
+        {
+            'billiard_ball': {
+                'type': BilliardBall,
+                'action_space': space.Discrete(4),
+                'params': lambda _: x
+            }
+
+        }
+
+### client usage ###
+bounds = [
+    InfiniteWall((0, 0), (length, 0)),  # bottom side
+    InfiniteWall((length, 0), (length, width)),  # right side
+    InfiniteWall((length, width), (0, width)),  # top side
+    InfiniteWall((0, width), (0, 0))  # left side
+]
+
+bld = Billiard(bounds=bounds)
+bld.add('billiard_ball', (x, y, vx, vy), 'cue')
+
+for i in range(4):
+    for j in range(i + 1):
+        x = 0.75 * length + radius * sqrt(3) * i
+        y = width / 2 + radius * (2 * j - i)
+        bld.add(BilliardBall((x, y), (0, 0), radius))
