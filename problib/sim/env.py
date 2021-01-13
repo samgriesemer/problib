@@ -61,7 +61,7 @@ class Env():
         # indexes and mappings
         self.indexes = {}
         self.index_map = {}
-        
+
         # views and mappings
         self.views = {}
         self.views_map = {}
