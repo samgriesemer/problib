@@ -49,7 +49,7 @@ class Example(Env):
                 'B': {
                     'type': B,
                     'action_space': space.Discrete(B)
-                },
+                }e
                 'Bsub': {
                     'type': B,
                     'action_space': space.Discrete(B),
@@ -75,12 +75,12 @@ class BPolicy(Policy):
 	pass
 
 ex = Example(p1, ..., pN, pmap={
-    'A': (APolicy, ),
-    'B': (BPolicy, view, []),
-    'group': (BPolicy, view)
+    'A': (APolicy, viewA, []),
+    'B': (BPolicy, viewB, []),
+    '<group>': (<policy_func>, <view>, <param_func>) # NOT tied to same group name from Env
 }, index={
     'idx': (idx, ['A', 'group'])
 })
 
-ex.add('A', pararms={...})
+ex.add('A', params={...})
 ex.add('B', ..., group='group')

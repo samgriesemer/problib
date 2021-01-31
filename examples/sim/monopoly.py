@@ -92,10 +92,7 @@ class MonopolyEnv(env.Env):
         self.player_range = player_range
 
 
-        super().__init__(
-            action_space={},
-            entity_map={
-                'player': Player
-            },
-        )
+        super().__init__({
+            'player': (Player, 
+        })
 
