@@ -24,9 +24,16 @@ class Distribution():
         '''return cdf^{-1}(p) = [Pr(x <= X) == p]'''
         pass
 
-    def sample(self, n):
-        '''n: number of samples'''
-        pass
+    def sample(self, n=1):
+        '''
+        n: number of samples
+
+        Dev note: should consider returning something like a "Sample" object, which wraps
+        the samples and provides convenient empirical estimates e.g. MLE of parameters
+        '''
+        if n == -1:
+            while True:
+                yield next(self.sample())
 
     '''common moments (consider making @property)'''
     def mean(self):
@@ -102,6 +109,7 @@ class Binomial(DiscreteDistribution):
         with relatively small n. consider poisson
         sampling for sufficiently large n
         '''
+        super().sample(n)
         # index entire cdf
         if self.n not in self._cdf:
             self.cdf(self.n, index=True)
@@ -145,7 +153,7 @@ class Poisson(ContinuousDistribution):
     def variance(self):
         return self.lmda
 
-class Uniform(ContinuousDistribution):
+class Uniform(Distribution):
     def __init__(self, a, b):
         self.a = a
         self.b = b
@@ -162,6 +170,7 @@ class Uniform(ContinuousDistribution):
         pass
 
     def sample(self, n=1):
+        yield from super().sample(n)
         for _ in range(n):
             yield random.random()*self.width+self.lower
 
@@ -169,4 +178,4 @@ class Uniform(ContinuousDistribution):
         return (self.a+self.b)/2
 
     def variance(self):
-        return self.p*(1-self.p) 
+        return (self.b-self.a)**2/12

@@ -130,7 +130,7 @@ class Env():
             }
         }
 
-    def add_entities(self, entities, groups=[]):
+    def add_entities(self, entities, groups=[]): pass
 
     def add(self, entities, groups=[]):
         '''
